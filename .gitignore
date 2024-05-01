@@ -1,0 +1,6 @@
+**./env
+backend/sqlite3
+backend/sqlite3.sh
+backend/sqlite3.wal
+**/dist
+**/node_modules
