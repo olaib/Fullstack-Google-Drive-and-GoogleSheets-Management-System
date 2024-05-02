@@ -18,7 +18,7 @@ import { ValidateGSheetsParams } from 'src/common/validators/gsheets_params.vali
  */
 @Injectable()
 export class GoogleSheetsService {
-  private gsheets: sheets_v4.Sheets;
+  private gsheets: sheets_v4.Sheets; 
 
   constructor(
     @Inject(envConfig.KEY) private env: ConfigType<typeof envConfig>,
