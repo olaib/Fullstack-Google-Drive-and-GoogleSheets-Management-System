@@ -4,21 +4,19 @@ import envConfig from '../../config/env.config';
 import { ConfigType } from '@nestjs/config';
 import {
   ROW,
-  DEFAULT_RANGE,
   SHEET_NOT_FOUND,
   GSHEETS_AUTH_URL,
   NO_DATA_IN_RANGE,
   GSHEETS_API_VERSION,
   DELETED_SUCCESSFULLY,
 } from '../../constants';
-import { ValidateGSheetsParams } from 'src/common/validators/gsheets_params.validator';
 /**
  * Google Sheets Service to interact with Google Sheets API
  * CRUID operations - Create, Read, Update, Insert, Delete
  */
 @Injectable()
 export class GoogleSheetsService {
-  private gsheets: sheets_v4.Sheets; 
+  private gsheets: sheets_v4.Sheets;
 
   constructor(
     @Inject(envConfig.KEY) private env: ConfigType<typeof envConfig>,
@@ -49,14 +47,11 @@ export class GoogleSheetsService {
     this.gsheets = gsheets;
   }
 
-  @ValidateGSheetsParams()
   async readSheet({
     spreadsheetId,
-    sheetName,
     range,
   }: {
     spreadsheetId: string;
-    sheetName: string;
     range: string;
   }): Promise<any> {
     const result = await this.gsheets.spreadsheets.values.get({
@@ -68,7 +63,6 @@ export class GoogleSheetsService {
     return rows;
   }
 
-  @ValidateGSheetsParams(true)
   async insertSheet(
     spreadsheetId: string,
     sheetName: string,
@@ -89,7 +83,6 @@ export class GoogleSheetsService {
   }
 
   //update
-  @ValidateGSheetsParams(true)
   async updateSheet(
     spreadsheetId: string,
     range: string,
@@ -111,7 +104,6 @@ export class GoogleSheetsService {
     return { updatedRange };
   }
   //delete
-  @ValidateGSheetsParams()
   async delete(
     spreadsheetId: string,
     sheetName: string,
@@ -147,5 +139,79 @@ export class GoogleSheetsService {
       },
     });
     return DELETED_SUCCESSFULLY;
+  }
+
+  async appendRow(
+    spreadsheetId: string,
+    sheetName: string,
+    data: unknown[],
+    range: string,
+  ): Promise<{ updatedRange: string }> {
+    const result = await this.gsheets.spreadsheets.values.append({
+      spreadsheetId: spreadsheetId,
+      range: range,
+      valueInputOption: ROW,
+      requestBody: {
+        values: [data],
+      },
+    });
+
+    if (!result.data) {
+      throw new HttpException(NO_DATA_IN_RANGE, HttpStatus.BAD_REQUEST);
+    }
+
+    const updatedRange = result.data?.updates?.updatedRange;
+    return { updatedRange };
+  }
+
+  //create new sheet with a name
+  async createSheet(sheetName: string): Promise<string> {
+    const result = await this.gsheets.spreadsheets.create({
+      requestBody: {
+        properties: {
+          title: sheetName,
+        },
+      },
+    });
+
+    return result.data.spreadsheetId;
+  }
+
+  // change spreadsheet title
+  async updateSheetTitle(
+    spreadsheetId: string,
+    title: string,
+  ): Promise<string> {
+    const result = await this.gsheets.spreadsheets.batchUpdate({
+      spreadsheetId: spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            updateSpreadsheetProperties: {
+              properties: {
+                title: title,
+              },
+              fields: 'title',
+            },
+          },
+        ],
+      },
+    });
+
+    return result.data.spreadsheetId;
+  }
+
+  rowsToArr(data: string[][]): object[] {
+    const [keys, ...values] = data;
+    return values.map((valuesArray) => {
+      return valuesArray.reduce((acc, value, index) => {
+        acc[keys[index]] = value;
+        return acc;
+      }, {});
+    });
+  }
+
+  objectToRow(data: object): string[] {
+    return Object.values(data);
   }
 }
