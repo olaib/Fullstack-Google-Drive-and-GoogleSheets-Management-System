@@ -1,6 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { google, sheets_v4 } from 'googleapis';
-import envConfig from '../../config/env.config';
 import { ConfigType } from '@nestjs/config';
 import {
   ROW,
@@ -18,9 +17,7 @@ import {
 export class GoogleSheetsService {
   private gsheets: sheets_v4.Sheets;
 
-  constructor(
-    @Inject(envConfig.KEY) private env: ConfigType<typeof envConfig>,
-  ) {
+  constructor() {
     const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY.replace(
       /\\n/g,
       '\n',
@@ -28,7 +25,13 @@ export class GoogleSheetsService {
     const googleClientEmail = process.env.CLIENT_EMAIL;
     this.authByServiceAccount(googleClientEmail, googlePrivateKey);
   }
-
+  /**
+   * Authenticate with Google Sheets API using service account
+   * @param googleClientEmail - Google client email
+   * @param googlePrivateKey - Google private key
+   * @returns void
+   * @throws Error
+   */
   private authByServiceAccount(
     googleClientEmail: string,
     googlePrivateKey: string,
@@ -46,7 +49,36 @@ export class GoogleSheetsService {
     });
     this.gsheets = gsheets;
   }
-
+  /**
+   * Get all sheets from Google Spreadsheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @returns Promise<{ sheetId: number; title: string; index: number }[]> - Array of sheets
+   * @throws HttpException | Error
+   * */
+  async getAllSheets(
+    spreadsheetId: string,
+  ): Promise<{ sheetId: number; title: string; index: number }[]> {
+    const spreadsheets = await this.gsheets.spreadsheets.get({
+      spreadsheetId: spreadsheetId,
+    });
+    const response = spreadsheets.data;
+    const sheets = response.sheets;
+    return sheets.map((sheet) => {
+      return {
+        sheetId: sheet.properties.sheetId,
+        title: sheet.properties.title,
+        index: sheet.properties.index,
+      };
+    });
+  }
+  /**
+   * Read Sheet from Google Sheets
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param range - Range of the google sheet
+   * @param sheetName - Name of the google sheet
+   * @returns Promise<any> - Rows of the google sheet
+   * @throws HttpException | Error
+   */
   async readSheet({
     spreadsheetId,
     range,
@@ -62,7 +94,15 @@ export class GoogleSheetsService {
     const rows = result.data.values;
     return rows;
   }
-
+  /**
+   * Insert new row in Google Sheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param sheetName - Name of the google sheet
+   * @param range - Range of the google sheet
+   * @param data - Data to insert in the google sheet
+   * @returns Promise<{ updatedRange: string }> - Updated range of the google sheet
+   * @throws HttpException | Error
+   */
   async insertSheet(
     spreadsheetId: string,
     sheetName: string,
@@ -77,12 +117,17 @@ export class GoogleSheetsService {
         values: [data],
       },
     });
-
     const updatedRange = result.data?.updates?.updatedRange;
     return { updatedRange };
   }
 
-  //update
+  /** Update row in Google Sheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param range - Range of the google sheet
+   * @param data - Data to update in the google sheet
+   * @returns Promise<{ updatedRange: string }> - Updated range of the google sheet
+   * @throws HttpException | Error
+   * */
   async updateSheet(
     spreadsheetId: string,
     range: string,
@@ -103,7 +148,14 @@ export class GoogleSheetsService {
     const updatedRange = result.data?.updatedRange;
     return { updatedRange };
   }
-  //delete
+  /**
+   * Delete row in Google Sheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param sheetName - Name of the google sheet
+   * @param rowNumber - Row number to delete
+   * @returns Promise<String> - Deleted successfully message
+   * @throws HttpException | Error
+   * */
   async delete(
     spreadsheetId: string,
     sheetName: string,
@@ -140,7 +192,15 @@ export class GoogleSheetsService {
     });
     return DELETED_SUCCESSFULLY;
   }
-
+  /**
+   * Append row in Google Sheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param sheetName - Name of the google sheet
+   * @param data - Data to append in the google sheet
+   * @param range - Range of the google sheet
+   * @returns Promise<{ updatedRange: string }> - Updated range of the google sheet
+   * @throws HttpException | Error
+   * */
   async appendRow(
     spreadsheetId: string,
     sheetName: string,
@@ -155,16 +215,18 @@ export class GoogleSheetsService {
         values: [data],
       },
     });
-
-    if (!result.data) {
+    if (!result.data)
       throw new HttpException(NO_DATA_IN_RANGE, HttpStatus.BAD_REQUEST);
-    }
 
     const updatedRange = result.data?.updates?.updatedRange;
     return { updatedRange };
   }
 
-  //create new sheet with a name
+  /** Create new Google Sheet
+   * @param sheetName - Name of the new sheet to create
+   * @returns Promise<String> - Spreadsheet ID
+   * @throws HttpException | Error
+   * */
   async createSheet(sheetName: string): Promise<string> {
     const result = await this.gsheets.spreadsheets.create({
       requestBody: {
@@ -177,7 +239,12 @@ export class GoogleSheetsService {
     return result.data.spreadsheetId;
   }
 
-  // change spreadsheet title
+  /**
+   * Update Google Sheet title
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param title - New title of the google sheet to update
+   * @returns Promise<String> - Spreadsheet ID
+   */
   async updateSheetTitle(
     spreadsheetId: string,
     title: string,
@@ -199,19 +266,5 @@ export class GoogleSheetsService {
     });
 
     return result.data.spreadsheetId;
-  }
-
-  rowsToArr(data: string[][]): object[] {
-    const [keys, ...values] = data;
-    return values.map((valuesArray) => {
-      return valuesArray.reduce((acc, value, index) => {
-        acc[keys[index]] = value;
-        return acc;
-      }, {});
-    });
-  }
-
-  objectToRow(data: object): string[] {
-    return Object.values(data);
   }
 }

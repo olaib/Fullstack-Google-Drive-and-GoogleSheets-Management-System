@@ -1,4 +1,14 @@
-export const MONGO_DB_URI_KEY: string = 'MONGO_DB_URI',
+export const BAREAR: string = 'Bearer',
+  USER_REQUEST_KEY: string = 'user',
+  WELCOME_MESSAGE = 'Welcome to the NestJS backend Google Sheets API',
+  SWAGGER_API_TITLE: string = 'NestJS backend Google Sheets API',
+  SWAGGER_API_DESCRIPTION: string =
+    'Welcome to the super cool NestJS backend Google Sheets API! 🚀 You can read, write, update, and delete data from Google Sheets. How cool is that? 😎',
+  SWAGGER_API_VERSION: string = '1.0',
+  SWAGGER_API_TAG: string = 'Google Sheets',
+  SWAGGER_API_ENDPOINT = 'api',
+  TEST_ENDPOINTS_MESSAGE = `<b>Ready to test the <b>endpoints</b>? visit the <b>Swagger UI</b> right here <a href="/${SWAGGER_API_ENDPOINT}">/${SWAGGER_API_ENDPOINT}</a> and let's get started! 🎉</br>
+@see <a href="https://docs.nestjs.com/openapi/introduction">NestJS Swagger documentation 🚀</a> for more information`,
   PORT_KEY: string = 'PORT',
   DEFAULT_PORT: string = '8080',
   INTERNAL_SERVER_ERROR: string = 'Internal Server Error',
@@ -12,4 +22,14 @@ export const MONGO_DB_URI_KEY: string = 'MONGO_DB_URI',
   DELETED_SUCCESSFULLY: string = 'deleted successfully',
   ADDED_SUCCESSFULLY: string = 'added successfully',
   MISSING_GSHETS_PARAMS: string =
-    'Missing required parameters [spreadsheetId, range, data] make sure to pass all required parameters';
+    'Missing required parameters [spreadsheetId, range, data] make sure to pass all required parameters',
+  ALREADY_EXISTS: string = 'already exists',
+  INVALID_PASSWORD: string = 'Invalid password',
+  INCORRECT_PASSWORD: string = 'Incorrect password',
+  REQUIRED_FIELD: string = 'required field',
+  PASSWORD_REG = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
+  EXISTS_USER: string = 'User already exists with that username or rowNumber',
+  USER_NOT_FOUND: string = 'User not found',
+  DELETE_USERS_SUCCESS: string = 'All users deleted successfully',
+  USER_NOT_LOGGED_IN: string = 'User not logged in',
+  USER_LOGGED_OUT: string = 'User logged out';

@@ -17,6 +17,7 @@ import {
   UPDATED_SUCCESSFULLY,
 } from '../../constants';
 import { DeleteRowDto } from '../dto/delete-row.dto/delete-row.dto';
+import { HelpersService } from 'src/common/helpers/helpers.service';
 
 @Controller('sheets')
 export class GoogleSheetsController {
@@ -39,14 +40,13 @@ export class GoogleSheetsController {
   }> {
     const { spreadsheetId, range = DEFAULT_RANGE, data } = dataFieldsToUpdate;
 
-    const dataToRowObj = this.googleSheetsService.objectToRow(data);
+    const dataToRowObj = HelpersService.objectToRow(data);
 
     const { updatedRange } = await this.googleSheetsService.updateSheet(
       spreadsheetId,
       range,
       dataToRowObj,
     );
-
     return {
       message: UPDATED_SUCCESSFULLY,
       updatedRange: updatedRange,
@@ -74,8 +74,7 @@ export class GoogleSheetsController {
       range = DEFAULT_RANGE,
     } = dataFieldsToUpdate;
 
-    const dataToRowObj = this.googleSheetsService.objectToRow(data);
-
+    const dataToRowObj = HelpersService.objectToRow(data);
     const { updatedRange } = await this.googleSheetsService.insertSheet(
       spreadsheetId,
       sheetName,
@@ -92,5 +91,12 @@ export class GoogleSheetsController {
   @Post('create')
   async createSheet(@Body() sheetName: string): Promise<string> {
     return await this.googleSheetsService.createSheet(sheetName);
+  }
+  //find all sheets details in a spreadsheet
+  @Get('all')
+  async getAllSheets(
+    @Query('spreadsheetId') spreadsheetId: string,
+  ): Promise<any> {
+    return await this.googleSheetsService.getAllSheets(spreadsheetId);
   }
 }
