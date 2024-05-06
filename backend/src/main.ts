@@ -12,7 +12,7 @@ import {
   SWAGGER_API_VERSION,
 } from './constants';
 
-//todo: add permissions to the user in the spreadsheet
+//todo: add permissions to the user in thecreated dto for spreadsheet
 /**
  * validation pipe is a built-in pipe provided by NestJS to validate incoming requests
  * @see https://docs.nestjs.com/techniques/validation for more information
