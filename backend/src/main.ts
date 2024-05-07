@@ -18,8 +18,14 @@ import {
  * @see https://docs.nestjs.com/techniques/validation for more information
  * FastifyAdapter is a built-in adapter provided by NestJS to use Fastify as the underlying HTTP server
  * @see https://docs.nestjs.com/techniques/performance for more information
+<<<<<<< Updated upstream
  * Swagger documentation is a built-in feature provided by NestJS to generate API documentation and test the API endpoints
  * @see https://docs.nestjs.com/openapi/introduction for more information
+=======
+ * Swagger documentation is a built-in feature provided by NestJS to generate API documentation and test API endpoints
+ * @see https://docs.nestjs.com/openapi/introduction for more information
+ *
+>>>>>>> Stashed changes
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
