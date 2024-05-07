@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseFilePipe,
   Post,
   UploadedFile,
   UploadedFiles,
@@ -21,17 +20,8 @@ export class MyGoogleDriveController {
   @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
   async uploadFile(
     @Param('folderId') folderId: string,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          // new MaxFileSizeValidator({ maxSize: 1000 }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
-    console.log('file', file);
-    console.log('folderId', folderId);
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<any> {
     return this.myGoogleDriveService.uploadFile(folderId, file);
   }
 
@@ -40,44 +30,42 @@ export class MyGoogleDriveController {
   uploadFiles(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Param('folderId') folderId: string,
-  ) {
-    // console.log('files', files);
-    // console.log('folderId', folderId);
+  ): Promise<any> {
     return this.myGoogleDriveService.uploadMany(folderId, files);
   }
 
   @Delete('delete/:fileId')
-  async deleteFile(@Param('fileId') fileId: string) {
+  async deleteFile(@Param('fileId') fileId: string): Promise<any> {
     return this.myGoogleDriveService.deleteFile(fileId);
   }
 
   @Delete('delete')
-  async deleteFiles(@Body() filesIds: Array<string>) {
+  async deleteFiles(@Body() filesIds: Array<string>): Promise<any> {
     return this.myGoogleDriveService.deleteMany(filesIds);
   }
 
   @Get('get/file/url')
-  async getFileUrl(@Param('fileId') fileId: string) {
+  async getFileUrl(@Param('fileId') fileId: string): Promise<any> {
     return this.myGoogleDriveService.getFileUrl(fileId);
   }
 
   @Get('get/previews/:fileId')
-  async getPreviewUrl(@Param('fileId') fileId: string) {
+  async getPreviewUrl(@Param('fileId') fileId: string): Promise<any> {
     return this.myGoogleDriveService.getPreviewUrl(fileId);
   }
 
   @Get('get/previews')
-  async getFilesUrls(@Body() filesIds: Array<string>) {
+  async getFilesUrls(@Body() filesIds: Array<string>): Promise<any> {
     return this.myGoogleDriveService.getPreviewUrls(filesIds);
   }
 
   @Get('get/view')
-  async getViewUrl(@Param('fileId') fileId: string) {
+  async getViewUrl(@Param('fileId') fileId: string): Promise<any> {
     return this.myGoogleDriveService.getPreviewUrl(fileId);
   }
 
   @Get('get/view/urls')
-  async getViewUrls(@Body() filesIds: Array<string>) {
+  async getViewUrls(@Body() filesIds: Array<string>): Promise<any> {
     return this.myGoogleDriveService.getPreviewUrls(filesIds);
   }
 }

@@ -2,8 +2,10 @@ export const BAREAR: string = 'Bearer',
   USER_REQUEST_KEY: string = 'user',
   WELCOME_MESSAGE = 'Welcome to the NestJS backend Google Sheets API',
   SWAGGER_API_TITLE: string = 'NestJS backend Google Sheets API',
-  GOOGLE_DRIVE_REDIRECT_URL: string = 'https://developers.google.com/oauthplayground',
-  GOOGLE_DRIVE_BASE_URL: string = 'https://drive.google.com/file/d/fileId',
+  GOOGLE_DRIVE_REDIRECT_URL: string =
+    'https://developers.google.com/oauthplayground',
+  FILE_ID: string = 'fileId',
+  GOOGLE_DRIVE_BASE_URL: string = `https://drive.google.com/file/d/${FILE_ID}`,
   GOOGLE_DRIVE_PREVIEW_URL: string = `${GOOGLE_DRIVE_BASE_URL}/preview`,
   GOOGLE_DRIVE_VIEW_URL: string = `${GOOGLE_DRIVE_BASE_URL}/view`,
   SWAGGER_API_DESCRIPTION: string =

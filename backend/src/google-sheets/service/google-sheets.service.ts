@@ -169,9 +169,7 @@ export class GoogleSheetsService {
       (sheet) => sheet.properties.title === sheetName,
     );
 
-    if (!sheet) {
-      throw new HttpException(SHEET_NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    if (!sheet) throw new HttpException(SHEET_NOT_FOUND, HttpStatus.NOT_FOUND);
 
     const request = {
       deleteDimension: {
