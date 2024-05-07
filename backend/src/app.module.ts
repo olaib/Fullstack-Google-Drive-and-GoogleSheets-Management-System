@@ -8,24 +8,32 @@ import { RolesModule } from './roles/roles.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { StatusModule } from './statuses/status.module';
-import { HelpersModule } from './common/helpers/helpers.module';
 import { GlobalModule } from './common/global/global.module';
+import { GoogleDriveModule } from 'nestjs-google-drive';
+import { GOOGLE_DRIVE_REDIRECT_URL } from './constants';
+import { MyGoogleDriveModule } from './my-google-drive/my-google-drive.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    GoogleDriveModule.register({
+      clientId: process.env.OAUTH_CLIENT_ID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      redirectUrl: GOOGLE_DRIVE_REDIRECT_URL,
+      refreshToken: process.env.REFRESH_TOKEN,
+    }),
+    MongooseModule.forRootAsync({
+      useFactory: async () => ({
+        uri: process.env.MONGO_DB_URI,
+      }),
+    }),
     GoogleSheetsModule,
     UsersModule,
     GlobalModule,
     RolesModule,
     StatusModule,
     AuthModule,
-    GlobalModule,
-    MongooseModule.forRootAsync({
-      useFactory: async () => ({
-        uri: process.env.MONGO_DB_URI,
-      }),
-    }),
+    MyGoogleDriveModule,
   ],
   controllers: [AppController],
   providers: [AppService],

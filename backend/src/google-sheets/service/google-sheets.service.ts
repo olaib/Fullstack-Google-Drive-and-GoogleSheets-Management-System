@@ -30,7 +30,7 @@ export class GoogleSheetsService {
    * @param googleClientEmail - Google client email
    * @param googlePrivateKey - Google private key
    * @returns void
-   * @throws Error
+   * @throws Error | HttpException
    */
   private authByServiceAccount(
     googleClientEmail: string,
