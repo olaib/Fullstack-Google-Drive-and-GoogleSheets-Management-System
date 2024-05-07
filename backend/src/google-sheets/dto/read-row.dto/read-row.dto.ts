@@ -10,10 +10,10 @@ export class ReadRowDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  sheetName: string;
+  sheetName?: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  range: string;
+  range?: string;
 }
