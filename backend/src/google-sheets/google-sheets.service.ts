@@ -1,6 +1,9 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { google, sheets_v4 } from 'googleapis';
+<<<<<<< Updated upstream
 import envConfig from '../../config/env.config';
+=======
+>>>>>>> Stashed changes
 import { ConfigType } from '@nestjs/config';
 import {
   ROW,
@@ -18,9 +21,13 @@ import {
 export class GoogleSheetsService {
   private gsheets: sheets_v4.Sheets;
 
+<<<<<<< Updated upstream
   constructor(
     @Inject(envConfig.KEY) private env: ConfigType<typeof envConfig>,
   ) {
+=======
+  constructor() {
+>>>>>>> Stashed changes
     const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY.replace(
       /\\n/g,
       '\n',
@@ -46,8 +53,49 @@ export class GoogleSheetsService {
     });
     this.gsheets = gsheets;
   }
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:backend/src/google-sheets/google-sheets.service.ts
 
   async readSheet({
+========
+  /**
+   * Get all sheets from Google Spreadsheet
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @returns Promise<{ sheetId: number; title: string; index: number }[]> - Array of sheets
+   * @throws HttpException | Error
+   * */
+  async getAllSheets(
+    spreadsheetId: string,
+  ): Promise<{ sheetId: number; title: string; index: number }[]> {
+    const spreadsheets = await this.gsheets.spreadsheets.get({
+      spreadsheetId: spreadsheetId,
+    });
+    const response = spreadsheets.data;
+    const sheets = response.sheets;
+    return sheets.map((sheet) => {
+      return {
+        sheetId: sheet.properties.sheetId,
+        title: sheet.properties.title,
+        index: sheet.properties.index,
+      };
+    });
+  }
+  /**
+   * Read Sheet from Google Sheets
+   * @param spreadsheetId - Google Spreadsheet ID
+   * @param range - Range of the google sheet
+   * @param sheetName - Name of the google sheet
+   * @returns Promise<any> - Rows of the google sheet
+   * @throws HttpException | Error
+   */
+
+  async readSheet({ 
+    sheetName,
+>>>>>>>> Stashed changes:backend/src/google-sheets/service/google-sheets.service.ts
+=======
+
+  async readSheet({
+>>>>>>> Stashed changes
     spreadsheetId,
     sheetName,
     range,
@@ -58,23 +106,43 @@ export class GoogleSheetsService {
   }): Promise<any> {
     const result = await this.gsheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:backend/src/google-sheets/google-sheets.service.ts
       range: [sheetName, range].join('!'),
+========
+      range: `${sheetName}!${range}`
+>>>>>>>> Stashed changes:backend/src/google-sheets/service/google-sheets.service.ts
+=======
+      range: [sheetName, range].join('!'),
+>>>>>>> Stashed changes
     });
 
     const rows = result.data.values;
     return rows;
   }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream:backend/src/google-sheets/service/google-sheets.service.ts
 =======
   async getContentByGid(spreadsheetId: string,sheetName: string): Promise<any> {
+=======
+  async getContentByGid(
+    spreadsheetId: string,
+    sheetName: string,
+  ): Promise<any> {
+>>>>>>> Stashed changes
     const result = await this.gsheets.spreadsheets.get({
       spreadsheetId: spreadsheetId,
       ranges: [sheetName],
       includeGridData: true,
+<<<<<<< Updated upstream
 
     });
     console.log(result)
+=======
+    });
+    console.log(result);
+>>>>>>> Stashed changes
     return result.data.sheets;
     // const sheet = result.data.sheets.find((sheet) => sheet.properties.sheetId === Number(gid));
     // return sheet;
@@ -88,7 +156,14 @@ export class GoogleSheetsService {
    * @returns Promise<{ updatedRange: string }> - Updated range of the google sheet
    * @throws HttpException | Error
    */
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:backend/src/google-sheets/google-sheets.service.ts
 >>>>>>> Stashed changes:backend/src/google-sheets/google-sheets.service.ts
+========
+
+>>>>>>>> Stashed changes:backend/src/google-sheets/service/google-sheets.service.ts
+=======
+>>>>>>> Stashed changes
   async insertSheet(
     spreadsheetId: string,
     sheetName: string,

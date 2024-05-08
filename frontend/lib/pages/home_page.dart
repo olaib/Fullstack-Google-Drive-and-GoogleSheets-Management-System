@@ -6,9 +6,13 @@ import 'package:frontend/common/widgets/custom_loading_indicator.dart';
 import 'package:frontend/common/widgets/title_text.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/services/HttpServices.dart';
+<<<<<<< Updated upstream
 import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
+=======
+import 'package:frontend/utils/logger/logger.dart';
+>>>>>>> Stashed changes
 import 'package:frontend/utils/constants/sizes.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:go_router/go_router.dart';
@@ -44,7 +48,10 @@ class _HomePageState extends State<HomePage> {
   // static final HttpServer _server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8000);
   static final HttpServices _httpServices = getIt<HttpServices>();
   List<SheetTitle> _titles = [];
+<<<<<<< Updated upstream
   static final NavigationService _navService = getIt<NavigationService>();
+=======
+>>>>>>> Stashed changes
   bool isLoading = false;
 
   @override

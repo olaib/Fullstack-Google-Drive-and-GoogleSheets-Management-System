@@ -1,8 +1,14 @@
 // ignore_for_file: constant_identifier_names
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 const String SANS_BLACK_FONT = 'SansBlack';
 
 const Color PRIMARY_COLOR = Color(0xFF1451AD);
+=======
+import 'package:frontend/utils/constants/colors.dart';
+const String SANS_BLACK_FONT = 'SansBlack';
+
+>>>>>>> Stashed changes
 
 const TextStyle headlineTextStyle = TextStyle(
   fontFamily: SANS_BLACK_FONT,

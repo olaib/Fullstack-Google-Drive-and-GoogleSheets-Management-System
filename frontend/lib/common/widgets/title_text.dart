@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:frontend/utils/styles/fonts.dart';
 import 'package:frontend/utils/helpers/functions.dart';
+=======
+import 'package:frontend/utils/helpers/functions.dart';
+import 'package:frontend/utils/constants/colors.dart';
+import 'package:frontend/utils/styles/fonts.dart';
+
+>>>>>>> Stashed changes
 
 class TitleText extends StatelessWidget {
   const TitleText({

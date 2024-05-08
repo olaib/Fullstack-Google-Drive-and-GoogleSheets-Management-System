@@ -8,12 +8,15 @@ export class ReadRowDto {
   spreadsheetId: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsString()
   sheetName?: string;
 
   @ApiProperty()
   @IsOptional()
+<<<<<<< Updated upstream
   @IsString()
   range?: string;
+=======
+  range: string;
+>>>>>>> Stashed changes
 }

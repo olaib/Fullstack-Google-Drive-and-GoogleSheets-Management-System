@@ -1,7 +1,7 @@
-import { ReadhRowDto } from './read-row.dto';
+import { ReadRowDto } from './read-row.dto';
 
-describe('ReadhRowDto', () => {
+describe('ReadRowDto', () => {
   it('should be defined', () => {
-    expect(new ReadhRowDto()).toBeDefined();
-  });
+    expect(new ReadRowDto()).toBeDefined();
+  }); 
 });

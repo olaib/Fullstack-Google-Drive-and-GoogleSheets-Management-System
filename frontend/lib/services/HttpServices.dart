@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import 'dart:convert';
 import 'package:frontend/utils/logger/logger.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,47 @@ class HttpServices {
       return data;
     } else {
       throw Exception('Failed to load sheet content');
+=======
+// ignore: file_names
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:frontend/utils/logger/logger.dart';
+
+class HttpServices {
+  HttpServices(this.serverUrl);
+
+  final String serverUrl;
+
+  Future<List<dynamic>> getSheetsTitles() async {
+    try {
+      final response = await http.get(Uri.parse('$serverUrl/sheets'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        Log.debug('Loaded sheets: $data');
+        return data;
+      } else {
+        throw Exception('Failed to load sheets');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+
+  Future<List<dynamic>> getSheetContent(
+      {required String sheetId, required String title}) async {
+    try {
+      final response = await http.get(Uri.parse(
+          '$serverUrl/sheets?spreadsheetId=$sheetId&sheetName=$title'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        Log.debug('Loaded sheet content: $data');
+        return data;
+      } else {
+        throw Exception('Failed to load sheet content');
+      }
+    } catch (e) {
+      throw Exception('$e');
+>>>>>>> Stashed changes
     }
   }
 }

@@ -15,7 +15,11 @@ class SheetPage extends StatefulWidget {
 
 class _SheetPageState extends State<SheetPage> {
   static final HttpServices _httpServices = getIt<HttpServices>();
+<<<<<<< Updated upstream
   List<List<String>> sheetContent = [];
+=======
+  List<dynamic> sheetContent = [];
+>>>>>>> Stashed changes
   bool isLoading = false;
 
   void loadSheetContent() async {
@@ -24,11 +28,19 @@ class _SheetPageState extends State<SheetPage> {
       Log.debug(
           'Loading sheet content for ${widget.sheetId} and ${widget.sheetTitle}');
       final sheetContent = await _httpServices.getSheetContent(
+<<<<<<< Updated upstream
           widget.sheetId!, widget.sheetTitle!);
       setState(() {
         this.sheetContent = sheetContent;
       });
       print(sheetContent);
+=======
+          sheetId: widget.sheetId!, title: widget.sheetTitle!);
+      setState(() {
+        this.sheetContent = sheetContent;
+      });
+      Log.debug(sheetContent);
+>>>>>>> Stashed changes
     } catch (e) {
       Log.error('Failed to load sheet content');
     }

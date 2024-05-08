@@ -4,11 +4,31 @@ const String APP_NAME = 'Google Sheets and Google Drive Manager',
     MENU_TOOLTIP_NAME = 'Menu',
     SIGNOUT_TITLE = 'Sign Out',
     ABOUT_TITLE = 'About',
+    PAGE_NOT_FOUND_TITLE = '404 🤷‍♂️',
+    HOME = 'Home',
+    BACK = 'Back',
+    ABOUT = 'About',
 // =========================== KEYS ===========================
     ROOT_NAV_KEY = 'root',
     THEME_STATE_KEY = 'THEME_STATE',
+<<<<<<< Updated upstream
 // =========================== PARAMS ===========================
     SHEET_ID_PARAM = 'sheetId',
     SHEET_TITLE_PARAM = 'title',
 // ============================ TEXTS ============================
     MANAGE_SHEETS = 'Manage Sheets';
+=======
+// ============================ TEXTS ============================
+    MANAGE_SHEETS = 'Manage Sheets',
+    EMPTY_STRING = '______',
+    DATE_FORMAT = 'dd/MM/yyyy HH:mm:ss',
+    SLASH = '/',
+    ZERO_DURATION_STRING_FORMATE = '00:00:00',
+    UNDERSCORE = '_',
+    EMPTY_DATE_FORMATE = EMPTY_STRING,
+    YES = 'Yes',
+    NO = 'No',
+    MESSAGE_404 =
+        "It seems I've lost my way! Time for a coffee break to wake up and find my way back. And if you're missing home, you can press the 'Home' button to return to the starting point. ☕️🏠😅",
+    GENERIC_ERROR_TITLE = 'Error: An unexpected issue occurred 😞';
+>>>>>>> Stashed changes
