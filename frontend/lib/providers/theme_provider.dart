@@ -14,10 +14,7 @@ class ThemeProvider with ChangeNotifier {
   bool get isDarkMode => _isDarkMode;
   ThemeMode get themeMode => _isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
-  void toggleTheme() {
-    setTheme(!_isDarkMode);
-    notifyListeners();
-  }
+  void toggleTheme() => setTheme(isDarkMode: !_isDarkMode);
 
   ThemeProvider() {
     init();
@@ -26,18 +23,11 @@ class ThemeProvider with ChangeNotifier {
   Future<SharedPreferences> _getSharedPref() async =>
       await SharedPreferences.getInstance();
 
-  Future<bool> init() async {
-    if (ThemeMode.system == ThemeMode.dark) {
-      _isDarkMode = true;
-    } else {
-      SharedPreferences pref = await _getSharedPref();
-      _isDarkMode = pref.getBool(themeStateKey) ?? false;
-    }
-    notifyListeners();
-    return _isDarkMode;
+  Future<void> init() async {
+    setTheme();
   }
 
-  Future<void> setTheme(bool isDarkMode) async {
+  Future<void> setTheme({bool isDarkMode = false}) async {
     // if system theme is dark, so automatically set dark mode
     if (ThemeMode.system == ThemeMode.dark) {
       _isDarkMode = true;

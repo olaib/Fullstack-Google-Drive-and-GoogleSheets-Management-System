@@ -22,7 +22,7 @@ import { MyGoogleDriveModule } from './my-google-drive/my-google-drive.module';
       redirectUrl: GOOGLE_DRIVE_REDIRECT_URL,
       refreshToken: process.env.REFRESH_TOKEN,
     }),
-    MongooseModule.forRootAsync({
+    MongooseModule.forRootAsync({ 
       useFactory: async () => ({
         uri: process.env.MONGO_DB_URI,
       }),

@@ -17,7 +17,8 @@ import {
   UPDATED_SUCCESSFULLY,
 } from '../../constants';
 import { DeleteRowDto } from '../dto/delete-row.dto/delete-row.dto';
-import { HelpersService } from 'src/common/helpers/helpers.service';
+import { HelpersService } from '../../common/helpers/helpers.service';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Controller('sheets')
 export class GoogleSheetsController {
@@ -25,11 +26,16 @@ export class GoogleSheetsController {
 
   @Get()
   async getSheet(@Query() query: ReadRowDto): Promise<any> {
-    const { spreadsheetId, range = DEFAULT_RANGE } = query;
+    const { spreadsheetId, range, sheetName } = query;
+    if (sheetName.includes('%'))
+      throw new HttpException(
+        'sheetName cannot contain spaces',
+        HttpStatus.BAD_REQUEST,
+      );
 
     return await this.googleSheetsService.readSheet({
       spreadsheetId: spreadsheetId,
-      range: range,
+      range: `${sheetName}!${range}`,
     });
   }
 
@@ -38,13 +44,13 @@ export class GoogleSheetsController {
     message: string;
     updatedRange: string;
   }> {
-    const { spreadsheetId, range = DEFAULT_RANGE, data } = dataFieldsToUpdate;
+    const { spreadsheetId, sheetName, range, data } = dataFieldsToUpdate;
 
     const dataToRowObj = HelpersService.objectToRow(data);
 
     const { updatedRange } = await this.googleSheetsService.updateSheet(
       spreadsheetId,
-      range,
+      `${sheetName}!${range}`,
       dataToRowObj,
     );
     return {
@@ -93,7 +99,7 @@ export class GoogleSheetsController {
     return await this.googleSheetsService.createSheet(sheetName);
   }
   //find all sheets details in a spreadsheet
-  @Get('all')
+  @Get('titles')
   async getAllSheets(
     @Query('spreadsheetId') spreadsheetId: string,
   ): Promise<any> {

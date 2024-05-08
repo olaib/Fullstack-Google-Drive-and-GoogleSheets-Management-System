@@ -10,7 +10,7 @@ export class DeleteRowDto extends PickType(ReadRowDto, [
   @IsNotEmpty()
   @IsString()
   range: string;
-  
+
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()

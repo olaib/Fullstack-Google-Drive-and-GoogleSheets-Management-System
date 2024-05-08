@@ -1,6 +1,11 @@
+import 'package:frontend/utils/constants/constants.dart';
+
 enum Routes {
   home,
-  error, loginPage, about,
+  error,
+  loginPage,
+  about,
+  sheetScreen,
 }
 
 class MyRoute {
@@ -40,5 +45,10 @@ final Map<Routes, MyRoute> _routesMap = {
     name: 'About',
     url: 'about',
     route: Routes.about,
+  ),
+  Routes.sheetScreen: const MyRoute(
+    name: 'Sheet',
+    url: 'sheet/:sheetId/:title',
+    route: Routes.sheetScreen,
   ),
 };

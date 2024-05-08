@@ -1,6 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { google, sheets_v4 } from 'googleapis';
-import { ConfigType } from '@nestjs/config';
 import {
   ROW,
   SHEET_NOT_FOUND,
@@ -18,7 +17,7 @@ export class GoogleSheetsService {
   private gsheets: sheets_v4.Sheets;
 
   constructor() {
-    const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY.replace(
+    const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(
       /\\n/g,
       '\n',
     );
@@ -86,11 +85,15 @@ export class GoogleSheetsService {
     spreadsheetId: string;
     range: string;
   }): Promise<any> {
+  
     const result = await this.gsheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
       range: range,
     });
 
+    if (!result.data.values) {
+      throw new HttpException(NO_DATA_IN_RANGE, HttpStatus.NOT_FOUND);
+    }
     const rows = result.data.values;
     return rows;
   }

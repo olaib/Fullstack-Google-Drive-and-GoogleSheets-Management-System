@@ -4,9 +4,9 @@ import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:frontend/utils/routes/nav_button.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -16,8 +16,7 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  final _authProvider = getIt<AuthProvider>();
-  final _navService = getIt<NavigationService>();
+  final AuthProvider _authProvider = getIt<AuthProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +26,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          builderHeader(context),
-          buildNavButtons(context),
+          buildDrawerHeader(context),
           const Divider(),
           buildFooter(context),
         ],
@@ -36,31 +34,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget builderHeader(BuildContext context) {
+  Widget buildDrawerHeader(BuildContext context) {
     return DrawerHeader(
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
       ),
-      child: Column(
+      child: const Column(
         children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              _authProvider.isAuthenticated
-                  ? FontAwesomeIcons.userLarge
-                  : FontAwesomeIcons.userLargeSlash,
-              color: Theme.of(context).primaryColor,
-            ),
+          FaIcon(
+            FontAwesomeIcons.circleNotch,
+            size: 50,
+            color: Colors.white,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Text(
-            _authProvider.isAuthenticated
-                ? _authProvider.user!['name']
-                : 'Guest',
-            style: const TextStyle(
+            APP_NAME,
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 20,
             ),
           ),
         ],
@@ -93,7 +84,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           title: const Text(ABOUT_TITLE),
           leading: const FaIcon(FontAwesomeIcons.info),
           onTap: () {
-            _navService.navigateTo(context, Routes.about);
+            NavigationService.navigateTo(context, Routes.about);
           },
         ),
       ],
@@ -101,7 +92,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Future<void> _signout(BuildContext context) async {
-    await _authProvider.signOut();
-    if (context.mounted) _navService.navigateTo(context, Routes.home);
+    await _authProvider.logout();
+    if (context.mounted) NavigationService.navigateTo(context, Routes.home);
   }
 }

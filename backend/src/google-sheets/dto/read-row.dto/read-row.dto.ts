@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { DEFAULT_RANGE } from 'src/constants';
 
 export class ReadRowDto {
   @ApiProperty()
@@ -8,12 +9,14 @@ export class ReadRowDto {
   spreadsheetId: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsString()
   sheetName: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  range: string;
+  range: string = DEFAULT_RANGE;
+
 }
+
+

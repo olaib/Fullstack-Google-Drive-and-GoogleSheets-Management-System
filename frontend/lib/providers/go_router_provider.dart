@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/constants/sizes.dart';
+import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/providers/auth_provider.dart';
@@ -27,6 +28,14 @@ class GoRouterProvider {
           name: Routes.error.name,
           pageBuilder: (context, state) => buildMaterialPage(const ErrorPage()),
         ),
+        GoRoute(
+            path: Routes.sheetScreen.url,
+            name: Routes.sheetScreen.name,
+            pageBuilder: (context, state) {
+              return buildMaterialPage(SheetPage(
+                  sheetId: state.pathParameters[SHEET_ID_PARAM],
+                  sheetTitle: state.pathParameters[SHEET_TITLE_PARAM]));
+            })
       ],
     ),
   ];
@@ -49,7 +58,7 @@ class GoRouterProvider {
     );
   }
 
-  static middleware(BuildContext context, GoRouterState state) {
+  static String? middleware(BuildContext context, GoRouterState state) {
     try {
       final next = state.uri.toString();
       return next;

@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/injection_container.dart' as di;
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/providers/auth_provider.dart';
@@ -10,11 +11,11 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load().then((_) => _setupApp()).then((_) => runApp(const App()));
+  await _setupApp().then((_) => runApp(const App()));
 }
 
-void _setupApp() {
-  di.init();
+Future<void> _setupApp() async {
+  await di.init();
 }
 
 class App extends StatelessWidget {
@@ -27,8 +28,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => themeProvider),
-        ChangeNotifierProvider(create: (_) => _authProvider),
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => themeProvider),
+        ChangeNotifierProvider<AuthProvider>(create: (_) => _authProvider),
       ],
       child: MaterialApp.router(
         title: APP_NAME,
