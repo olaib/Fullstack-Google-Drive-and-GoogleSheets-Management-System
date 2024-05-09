@@ -1,4 +1,3 @@
-
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -76,5 +75,24 @@ class TConverter {
     final seconds = intTo2Digits(duration.inSeconds.remainder(60));
 
     return '$days:$hours:$minutes:$seconds';
+  }
+
+  /// Get the range for the paginated table.
+  ///
+  /// [currentPage] the current page in the paginated table.
+  /// [rowsPerPage] the number of rows per page.
+  /// [startCol] the starting column for example 'A'.
+  /// [endCol] the ending column for example 'Z'(optional).
+  static String range(int currentPage, int rowsPerPage,
+      {String startCol = 'A', String endCol = ''}) {
+    // skip the first row
+    final start = (currentPage - 1) * rowsPerPage + 2;
+    final end = currentPage * rowsPerPage;
+    return '$startCol$start:$endCol$end';
+  }
+
+  static Iterable<String> fill(List<String> list, int newLength) {
+    final toExtend = (newLength - list.length).abs();
+    return List.filled(toExtend, '').toList();
   }
 }

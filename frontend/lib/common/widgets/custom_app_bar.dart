@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/colors.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
@@ -44,10 +45,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           icon: _theme.isDarkMode ? Icons.light_mode : Icons.dark_mode,
         ),
         if (_auth.isAuthenticated)
-          CustomGestureDetector(
-            icon: Icons.logout,
-            onTap: () async => await _signout(context),
-          ),
+          buildProfileMenu(context, _auth.user!.name, _auth.user!.email),
         if (NavigationService.canPop(context)) const CustomBackButton(),
       ],
     );
@@ -88,4 +86,48 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ],
         ),
       );
+  //return popupmenu with settings and logout
+  Widget buildProfileMenu(BuildContext context, String name, String email) {
+    return PopupMenuButton<String>(
+        onSelected: (String value) async {
+          switch (value) {
+            case 'logout':
+              await _signout(context);
+              if (context.mounted) {
+                NavigationService.navigateTo(context, Routes.home);
+              }
+              break;
+            case 'settings':
+              NavigationService.navigateTo(context, Routes.settings);
+              break;
+          }
+        },
+        itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(FontAwesomeIcons.user),
+                  title: Text(name),
+                  subtitle: Text(email),
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
+                  onTap: () {
+                    NavigationService.navigateTo(context, Routes.settings);
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Logout'),
+                  onTap: () async {
+                    await _signout(context);
+                  },
+                ),
+              ),
+            ]);
+  }
 }

@@ -2,10 +2,11 @@ import 'package:frontend/utils/constants/constants.dart';
 
 enum Routes {
   home,
+  initialRoute,
   error,
   loginPage,
   about,
-  sheetScreen,
+  sheetScreen, settings,
 }
 
 class MyRoute {
@@ -26,9 +27,14 @@ extension RoutesExtension on Routes {
 }
 
 final Map<Routes, MyRoute> _routesMap = {
+  Routes.initialRoute: const MyRoute(
+    name: 'Welcome page',
+    url: '/',
+    route: Routes.initialRoute,
+  ),
   Routes.home: const MyRoute(
     name: 'Home',
-    url: '/',
+    url: 'home',
     route: Routes.home,
   ),
   Routes.error: const MyRoute(

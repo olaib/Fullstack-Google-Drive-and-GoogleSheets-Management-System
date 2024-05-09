@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/constants/sizes.dart';
-import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/providers/auth_provider.dart';
@@ -19,10 +18,15 @@ class GoRouterProvider {
 
   static final _routers = <RouteBase>[
     GoRoute(
-      path: Routes.home.url,
-      name: Routes.home.name,
-      pageBuilder: (context, state) => buildMaterialPage(const HomePage()),
+      path: Routes.initialRoute.url,
+      name: Routes.initialRoute.name,
+      pageBuilder: (context, state) => buildMaterialPage(const WelcomePage()),
       routes: [
+        GoRoute(
+          path: Routes.home.url,
+          name: Routes.home.name,
+          pageBuilder: (context, state) => buildMaterialPage(const HomePage()),
+        ),
         GoRoute(
           path: Routes.error.url,
           name: Routes.error.name,
@@ -49,7 +53,7 @@ class GoRouterProvider {
       debugLogDiagnostics: false,
       refreshListenable: _authProvider,
       navigatorKey: _rootNavKey,
-      initialLocation: Routes.home.url,
+      initialLocation: Routes.initialRoute.url,
       routes: _routers,
       redirect: (BuildContext context, GoRouterState state) async =>
           middleware(context, state),

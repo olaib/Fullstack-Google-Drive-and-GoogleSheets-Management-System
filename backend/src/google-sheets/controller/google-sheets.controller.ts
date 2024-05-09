@@ -12,30 +12,23 @@ import { ReadRowDto } from '../dto/read-row.dto/read-row.dto';
 import { UpdateRowDto } from '../dto/update-row.dto/update-row.dto';
 import {
   ADDED_SUCCESSFULLY,
-  DEFAULT_RANGE,
   DELETED_SUCCESSFULLY,
   UPDATED_SUCCESSFULLY,
 } from '../../constants';
 import { DeleteRowDto } from '../dto/delete-row.dto/delete-row.dto';
 import { HelpersService } from '../../common/helpers/helpers.service';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Controller('sheets')
 export class GoogleSheetsController {
   constructor(private readonly googleSheetsService: GoogleSheetsService) {}
-
   @Get()
-  async getSheet(@Query() query: ReadRowDto): Promise<any> {
+  async getSheet(@Query() query: ReadRowDto): Promise<any[][]> {
     const { spreadsheetId, range, sheetName } = query;
-    if (sheetName.includes('%'))
-      throw new HttpException(
-        'sheetName cannot contain spaces',
-        HttpStatus.BAD_REQUEST,
-      );
 
     return await this.googleSheetsService.readSheet({
       spreadsheetId: spreadsheetId,
-      range: `${sheetName}!${range}`,
+      range: range,
+      sheetName: sheetName,
     });
   }
 
@@ -49,8 +42,9 @@ export class GoogleSheetsController {
     const dataToRowObj = HelpersService.objectToRow(data);
 
     const { updatedRange } = await this.googleSheetsService.updateSheet(
+      sheetName,
       spreadsheetId,
-      `${sheetName}!${range}`,
+      range,
       dataToRowObj,
     );
     return {
@@ -73,12 +67,7 @@ export class GoogleSheetsController {
   async appendSheet(
     @Body() dataFieldsToUpdate: UpdateRowDto,
   ): Promise<{ message: string; updatedRange: string }> {
-    const {
-      data,
-      sheetName,
-      spreadsheetId,
-      range = DEFAULT_RANGE,
-    } = dataFieldsToUpdate;
+    const { data, sheetName, spreadsheetId, range } = dataFieldsToUpdate;
 
     const dataToRowObj = HelpersService.objectToRow(data);
     const { updatedRange } = await this.googleSheetsService.insertSheet(
@@ -98,6 +87,7 @@ export class GoogleSheetsController {
   async createSheet(@Body() sheetName: string): Promise<string> {
     return await this.googleSheetsService.createSheet(sheetName);
   }
+
   //find all sheets details in a spreadsheet
   @Get('titles')
   async getAllSheets(

@@ -80,15 +80,16 @@ export class GoogleSheetsService {
    */
   async readSheet({
     spreadsheetId,
+    sheetName,
     range,
   }: {
     spreadsheetId: string;
+    sheetName: string;
     range: string;
-  }): Promise<any> {
-  
+  }): Promise<any[][]> {
     const result = await this.gsheets.spreadsheets.values.get({
       spreadsheetId: spreadsheetId,
-      range: range,
+      range: `${sheetName}!${range}`,
     });
 
     if (!result.data.values) {
@@ -126,6 +127,7 @@ export class GoogleSheetsService {
 
   /** Update row in Google Sheet
    * @param spreadsheetId - Google Spreadsheet ID
+   * @param sheetName - Name of the google sheet
    * @param range - Range of the google sheet
    * @param data - Data to update in the google sheet
    * @returns Promise<{ updatedRange: string }> - Updated range of the google sheet
@@ -133,12 +135,13 @@ export class GoogleSheetsService {
    * */
   async updateSheet(
     spreadsheetId: string,
+    sheetName: string,
     range: string,
     data: unknown[],
   ): Promise<{ updatedRange: string }> {
     const result = await this.gsheets.spreadsheets.values.update({
       spreadsheetId: spreadsheetId,
-      range: range,
+      range: `${sheetName}!${range}`,
       valueInputOption: ROW,
       requestBody: {
         values: [data],
@@ -210,7 +213,7 @@ export class GoogleSheetsService {
   ): Promise<{ updatedRange: string }> {
     const result = await this.gsheets.spreadsheets.values.append({
       spreadsheetId: spreadsheetId,
-      range: range,
+      range: `${sheetName}!${range}`,
       valueInputOption: ROW,
       requestBody: {
         values: [data],

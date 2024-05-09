@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/storage/preference_utils.dart';
 // ignore: depend_on_referenced_packages
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/utils/constants/constants.dart';
 
 /// ThemeProvider is a class that provides the theme state of the app
@@ -19,24 +19,16 @@ class ThemeProvider with ChangeNotifier {
   ThemeProvider() {
     init();
   }
-  // load from disk
-  Future<SharedPreferences> _getSharedPref() async =>
-      await SharedPreferences.getInstance();
 
-  Future<void> init() async {
-    setTheme();
+  Future<void> init()async {
+    _isDarkMode = PreferenceUtils.getBool(themeStateKey);
+   await setTheme(isDarkMode: _isDarkMode);
   }
 
   Future<void> setTheme({bool isDarkMode = false}) async {
-    // if system theme is dark, so automatically set dark mode
-    if (ThemeMode.system == ThemeMode.dark) {
-      _isDarkMode = true;
-      // theme based on system theme
-    } else {
-      SharedPreferences pref = await _getSharedPref();
-      pref.setBool(themeStateKey, isDarkMode);
-      _isDarkMode = isDarkMode;
-    }
+    await PreferenceUtils.setBool(themeStateKey, isDarkMode);
+    _isDarkMode = isDarkMode;
+
     notifyListeners();
   }
 }

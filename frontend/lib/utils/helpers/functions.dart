@@ -11,4 +11,22 @@ class Helpers {
       kIsWeb || defaultTargetPlatform == TargetPlatform.fuchsia;
 
   static bool get isDarkMode => themeProvider.isDarkMode;
+
+  /// Compare two values.
+  ///
+  /// [a] the first value.
+  ///
+  /// [b] the second value.
+  ///
+  /// [ascending] the order of the comparison.
+  static int compare(dynamic a, dynamic b, bool ascending) {
+    // comare the values as numbers if they are numbers
+    if (a is num && b is num) {
+      return ascending ? a.compareTo(b) : b.compareTo(a);
+    }
+    // compare the values as strings
+    return ascending
+        ? a.toString().compareTo(b.toString())
+        : b.toString().compareTo(a.toString());
+  }
 }

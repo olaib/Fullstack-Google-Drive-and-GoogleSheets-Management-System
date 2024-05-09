@@ -11,6 +11,7 @@ const String SERVER_URL = 'http://localhost:8000',
 // =========================== KEYS ===========================
     ROOT_NAV_KEY = 'root',
     THEME_STATE_KEY = 'THEME_STATE',
+    SPREADSHEET_ID_KEY = 'SPREADSHEET_ID', // in preference utils
 
     // =========================== PARAMS ===========================
     SHEET_ID_PARAM = 'sheetId',
@@ -21,8 +22,6 @@ const String SERVER_URL = 'http://localhost:8000',
     HOME = 'Home',
     BACK = 'Back',
     ABOUT = 'About',
-
-// ============================ TEXTS ============================ 
     MANAGE_SHEETS = 'Manage Sheets',
     EMPTY_STRING = '______',
     DATE_FORMAT = 'dd/MM/yyyy HH:mm:ss',
@@ -34,4 +33,7 @@ const String SERVER_URL = 'http://localhost:8000',
     NO = 'No',
     MESSAGE_404 =
         "It seems I've lost my way! Time for a coffee break to wake up and find my way back. And if you're missing home, you can press the 'Home' button to return to the starting point. ☕️🏠😅",
-    GENERIC_ERROR_TITLE = 'Error: An unexpected issue occurred 😞';
+    GENERIC_ERROR_TITLE = 'Error: An unexpected issue occurred 😞',
+    EXAMPLE_SPREADSHEET_ID = "Example: https://docs.google.com/spreadsheets/d/<spreadsheet_id>/edit",
+    HEADERS_RANGE = 'A1:1';
+const Map<String, String> JSON_HEADERS = {'Content-Type': 'application/json'};

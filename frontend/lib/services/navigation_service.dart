@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
+export 'package:frontend/utils/routes/app_routes.dart';
 
 class NavigationService {
   NavigationService._();

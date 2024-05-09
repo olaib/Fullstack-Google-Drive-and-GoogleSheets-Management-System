@@ -3,13 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/common/widgets/custom_loading_indicator.dart';
 import 'package:frontend/common/widgets/title_text.dart';
 import 'package:frontend/injection_container.dart';
-import 'package:frontend/services/HttpServices.dart';
+import 'package:frontend/services/http_services.dart';
 import 'package:frontend/services/methods.dart';
 import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/constants/sizes.dart';
-import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
+// ignore: unused_import
 import 'package:go_router/go_router.dart';
 
 //todo: lazy load instead of loading all at once
@@ -41,7 +41,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // static final HttpServer _server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8000);
   static final HttpServices _httpServices = getIt<HttpServices>();
   List<Sheet> _titles = [];
   bool isLoading = false;
