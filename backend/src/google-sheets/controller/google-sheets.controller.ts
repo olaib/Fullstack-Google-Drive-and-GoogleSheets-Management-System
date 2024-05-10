@@ -6,6 +6,7 @@ import {
   Patch,
   Delete,
   Post,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { GoogleSheetsService } from '../service/google-sheets.service';
 import { ReadRowDto } from '../dto/read-row.dto/read-row.dto';
@@ -32,14 +33,15 @@ export class GoogleSheetsController {
     });
   }
 
-  @Patch('update')
+  @Post('update')
   async updateSheet(@Body() dataFieldsToUpdate: UpdateRowDto): Promise<{
     message: string;
     updatedRange: string;
   }> {
     const { spreadsheetId, sheetName, range, data } = dataFieldsToUpdate;
-
+    console.log('');
     const dataToRowObj = HelpersService.objectToRow(data);
+    console.log(dataToRowObj);
 
     const { updatedRange } = await this.googleSheetsService.updateSheet(
       sheetName,
@@ -53,7 +55,7 @@ export class GoogleSheetsController {
     };
   }
 
-  @Delete('row/delete')
+  @Delete('row')
   async deleteRow(@Body() body: DeleteRowDto): Promise<{ message: string }> {
     const { spreadsheetId, sheetName, rowNumber } = body;
     await this.googleSheetsService.delete(spreadsheetId, sheetName, rowNumber);
@@ -94,5 +96,18 @@ export class GoogleSheetsController {
     @Query('spreadsheetId') spreadsheetId: string,
   ): Promise<any> {
     return await this.googleSheetsService.getAllSheets(spreadsheetId);
+  }
+
+  @Post('update/title')
+  async updateSheetTitle(
+    @Body('spreadsheetId') spreadsheetId: string,
+    @Body('sheetId', ParseIntPipe) sheetId: number,
+    @Body('title') updatedTitle: string,
+  ): Promise<string> {
+    return await this.googleSheetsService.updateSheetTitle(
+      spreadsheetId,
+      sheetId,
+      updatedTitle,
+    );
   }
 }

@@ -35,7 +35,7 @@ class App extends StatelessWidget {
         title: APP_NAME,
         routerConfig: _routerProvider.router,
         themeMode: themeProvider.themeMode,
-        // theme: themeProvider.lightTheme,
+        // theme: themeProvider.theme,
         // darkTheme: themeProvider.darkTheme,
       ),
     );

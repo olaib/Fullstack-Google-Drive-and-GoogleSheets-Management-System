@@ -1,4 +1,4 @@
-import 'dart:convert' show jsonDecode;
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/helpers/converter.dart';
 import 'package:frontend/utils/logger/logger.dart';
@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class HttpServices {
   late final String _serverUrl;
+  //todo use change notifier later
   String _spreadsheetId = '';
 
   HttpServices(String url) : _serverUrl = url;
@@ -23,7 +24,7 @@ class HttpServices {
 
   Future<http.Response> status(http.Response response) async {
     try {
-      if (response.statusCode == 200) {
+      if (200 <= response.statusCode && response.statusCode < 300) {
         return response;
       } else {
         throw Exception(response.body);
@@ -74,5 +75,51 @@ class HttpServices {
         .then(status)
         .then(json)
         .then((data) => data[0]);
+  }
+
+  Future<void> updateRow(
+      String sheetTitle, List<dynamic> data, int index) async {
+    _loadSpreadsheetId();
+    await http
+        .post(Uri.parse('$_serverUrl/sheets/update'),
+            headers: JSON_HEADERS,
+            body: jsonEncode({
+              'spreadsheetId': _spreadsheetId,
+              'sheetName': sheetTitle,
+              'data': data.map((e) => e.toString()).toList(),
+              'range': '${index + 1}:${index + 1}'
+            }))
+        .then(status)
+        .then(json)
+        .then((data) => data);
+  }
+
+  Future<void> updateSheetTitle(int sheetId, String title) async {
+    _loadSpreadsheetId();
+    await http
+        .post(Uri.parse('$_serverUrl/sheets/update/title'),
+            headers: JSON_HEADERS,
+            body: jsonEncode({
+              'spreadsheetId': _spreadsheetId,
+              'sheetId': sheetId,
+              'title': title,
+            }))
+        .then(status)
+        .then((data) => data);
+  }
+  Future<void>
+  deleteRow(String sheetTitle, int index) async {
+    _loadSpreadsheetId();
+    await http
+        .delete(Uri.parse('$_serverUrl/sheets/row'),
+            headers: JSON_HEADERS,
+            body: jsonEncode({
+              'spreadsheetId': _spreadsheetId,
+              'sheetName': sheetTitle,
+              'rowNumber': index + 1, //skip headers
+            }))
+        .then(status)
+        .then(json)
+        .then((data) => data);
   }
 }

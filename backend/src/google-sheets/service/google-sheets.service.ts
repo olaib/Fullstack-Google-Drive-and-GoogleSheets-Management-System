@@ -137,12 +137,12 @@ export class GoogleSheetsService {
     spreadsheetId: string,
     sheetName: string,
     range: string,
-    data: unknown[],
+    data: any[],
   ): Promise<{ updatedRange: string }> {
     const result = await this.gsheets.spreadsheets.values.update({
       spreadsheetId: spreadsheetId,
       range: `${sheetName}!${range}`,
-      valueInputOption: ROW,
+      valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [data],
       },
@@ -196,6 +196,7 @@ export class GoogleSheetsService {
     });
     return DELETED_SUCCESSFULLY;
   }
+  
   /**
    * Append row in Google Sheet
    * @param spreadsheetId - Google Spreadsheet ID
@@ -251,6 +252,7 @@ export class GoogleSheetsService {
    */
   async updateSheetTitle(
     spreadsheetId: string,
+    sheetId: number,
     title: string,
   ): Promise<string> {
     const result = await this.gsheets.spreadsheets.batchUpdate({
@@ -258,8 +260,9 @@ export class GoogleSheetsService {
       requestBody: {
         requests: [
           {
-            updateSpreadsheetProperties: {
+            updateSheetProperties: {
               properties: {
+                sheetId: sheetId,
                 title: title,
               },
               fields: 'title',

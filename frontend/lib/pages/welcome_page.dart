@@ -118,7 +118,7 @@ class _WelcomePageState extends State<WelcomePage> {
           SPREADSHEET_ID_KEY, _spreadsheetIdController.text);
       // PreferenceUtils.setString(
       //     SPREADSHEET_ID_KEY, _spreadsheetIdController.text);
-      AppMethods.showMessage(context: context, message: "Spreadsheet ID saved");
+      AppMethods.showMessage(context, "Spreadsheet ID saved");
     } catch (e) {
       AppMethods.showErrorMessage(context, e.toString());
     }

@@ -1,20 +1,14 @@
-import {
-  IsNotEmpty,
-  IsNotEmptyObject,
-  IsObject,
-  IsOptional,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { ReadRowDto } from '../read-row.dto/read-row.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class UpdateRowDto extends ReadRowDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsNotEmptyObject()
-  @IsObject()
-  data: Record<string, any>;
+  @IsString()
+  range: string;
 
   @ApiProperty()
-  @IsOptional()
-  sheetName: string;
+  @IsArray()
+  data: any[];
 }

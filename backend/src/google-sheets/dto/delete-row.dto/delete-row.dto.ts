@@ -6,11 +6,6 @@ export class DeleteRowDto extends PickType(ReadRowDto, [
   'spreadsheetId',
   'sheetName',
 ]) {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  range: string;
-
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()

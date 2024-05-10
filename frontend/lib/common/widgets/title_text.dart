@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/constants/sizes.dart';
 import 'package:frontend/utils/styles/fonts.dart';
 import 'package:frontend/utils/helpers/functions.dart';
 import 'package:frontend/utils/constants/colors.dart';
-
+import 'package:frontend/utils/constants/fonts.dart';
 
 class TitleText extends StatelessWidget {
-  const TitleText({
+  const TitleText(
+    this.label, {
     super.key,
-    required this.label,
-    this.fontSize = 20,
+    this.fontSize = FONT_XLG,
     this.fontStyle = FontStyle.normal,
     this.decoration = TextDecoration.none,
     this.align = TextAlign.center,
@@ -31,8 +32,9 @@ class TitleText extends StatelessWidget {
         color: Helpers.isDarkMode ? Colors.white : color,
         fontSize: fontSize,
         fontStyle: fontStyle,
+        fontWeight: FontWeight.bold,
         decoration: decoration,
-        fontFamily: SANS_BLACK_FONT,
+        fontFamily: Fonts.OPEN_SANS.fontFamily,
       ),
     );
   }
@@ -40,13 +42,13 @@ class TitleText extends StatelessWidget {
 
 //secondary title text
 class SecondaryText extends StatelessWidget {
-  const SecondaryText({
+  const SecondaryText(
+    this.label, {
     super.key,
-    required this.label,
     this.fontSize = 20,
     this.fontStyle = FontStyle.normal,
     this.decoration = TextDecoration.none,
-    this.align = TextAlign.right,
+    this.align = TextAlign.left,
   });
 
   final String label;

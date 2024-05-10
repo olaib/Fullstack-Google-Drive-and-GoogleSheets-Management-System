@@ -20,15 +20,59 @@ class ThemeProvider with ChangeNotifier {
     init();
   }
 
-  Future<void> init()async {
+  Future<void> init() async {
     _isDarkMode = PreferenceUtils.getBool(themeStateKey);
-   await setTheme(isDarkMode: _isDarkMode);
+    await setTheme(isDarkMode: _isDarkMode);
   }
 
   Future<void> setTheme({bool isDarkMode = false}) async {
     await PreferenceUtils.setBool(themeStateKey, isDarkMode);
     _isDarkMode = isDarkMode;
-
     notifyListeners();
   }
+
+   // get theme => ThemeData(
+  //       primaryColor: PRIMARY_COLOR,
+  //       scaffoldBackgroundColor: WHITE_COLOR,
+  //       appBarTheme: const AppBarTheme(
+  //         backgroundColor: WHITE_COLOR,
+  //         elevation: 0,
+  //       ),
+  //       textTheme: const TextTheme(
+  //         bodyLarge: TextStyle(color: BLACK_COLOR),
+  //         bodyMedium: TextStyle(color: BLACK_COLOR),
+  //       ),
+  //       iconButtonTheme: const IconButtonThemeData(style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(WHITE_COLOR))),
+  //       iconTheme: const IconThemeData(color: BLACK_COLOR),
+  //       inputDecorationTheme: const InputDecorationTheme(
+  //         focusedBorder: UnderlineInputBorder(
+  //           borderSide: BorderSide(color: PRIMARY_COLOR),
+  //         ),
+  //         enabledBorder: UnderlineInputBorder(
+  //           borderSide: BorderSide(color: PRIMARY_COLOR),
+  //         ),
+  //       ),
+  //     );
+
+  // get darkTheme => ThemeData(
+  //       primaryColor: PRIMARY_COLOR,
+  //       scaffoldBackgroundColor: BLACK_COLOR,
+  //       appBarTheme: const AppBarTheme(
+  //         backgroundColor: PRIMARY_COLOR,
+  //         elevation: 0,
+  //       ),
+  //       textTheme: const TextTheme(
+  //         bodyLarge: TextStyle(color: WHITE_COLOR),
+  //         bodyMedium: TextStyle(color: WHITE_COLOR),
+  //       ),
+  //       iconTheme: const IconThemeData(color: WHITE_COLOR),
+  //       inputDecorationTheme: const InputDecorationTheme(
+  //         focusedBorder: UnderlineInputBorder(
+  //           borderSide: BorderSide(color: PRIMARY_COLOR),
+  //         ),
+  //         enabledBorder: UnderlineInputBorder(
+  //           borderSide: BorderSide(color: PRIMARY_COLOR),
+  //         ),
+  //       ),
+  //     );
 }

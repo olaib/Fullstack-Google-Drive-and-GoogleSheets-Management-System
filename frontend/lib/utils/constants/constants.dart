@@ -17,8 +17,12 @@ const String SERVER_URL = 'http://localhost:8000',
     SHEET_ID_PARAM = 'sheetId',
     SHEET_TITLE_PARAM = 'title',
 
+
 // ============================ TEXTS ============================
     PAGE_NOT_FOUND_TITLE = '404 🤷‍♂️',
+    DELETE_ROW_CONFIRM_MESSAGE = 'Are you sure you want to delete this row?',
+    CANCEL = 'Cancel',
+    CONFIRM = 'Confirm',
     HOME = 'Home',
     BACK = 'Back',
     ABOUT = 'About',
