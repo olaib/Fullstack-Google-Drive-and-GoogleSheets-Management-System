@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/common/widgets/paginated_data_table.dart';
+import 'package:frontend/features/google_sheets_data/pagenated_data_table/paginated_data_table.dart';
 
 class SheetPage extends StatefulWidget {
   const SheetPage({super.key, required this.sheetId, required this.sheetTitle});

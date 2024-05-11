@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/widgets/title_text.dart';
+import 'package:frontend/features/google_sheets_data/pagenated_data_table/data_source.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/services/http_services.dart';
 import 'package:frontend/services/methods.dart';
@@ -28,7 +29,7 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
   final ValueNotifier<bool> _isAllSelected = ValueNotifier<bool>(false);
-  List<bool> _isSelected = [];
+  final List<bool> _isSelected = [];
   int _selectedRow = -1;
 
   static final HttpServices _httpServices = getIt<HttpServices>();
@@ -92,31 +93,32 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
             child: SizedBox(
                 width: double.infinity,
                 child: PaginatedDataTable(
-                  showCheckboxColumn: true,
-                  onSelectAll: onSelectAll,
-                  header: TitleText(widget.sheetTitle, fontSize: FONT_LG),
-                  rowsPerPage: _rowsPerPage,
-                  onRowsPerPageChanged: setRowsPerPage,
-                  availableRowsPerPage: const [10, 25, 50],
-                  onPageChanged: onPageChanged,
-                  showFirstLastButtons: true,
-                  sortColumnIndex: _sortColumnIndex,
-                  sortAscending: _sortAscending,
-                  actions: actionsUI(context, fetchData),
-                  columns: headersToColumns(_headers, onSort),
-                  source:
-                      _DataSource(context, _rows[_currentPage]!, _selectedRow,
-                          onChanged: (index, valueColumn, value) {
-                    _rows[_currentPage]![index][valueColumn] = value;
-                  },
-                          onDelete: onDelete,
-                          onSelect: onselect,
-                          isSelected: _isSelected,
-                          onEdit: onEditRow,
-                          onSaved: onSavedRow),
-                )),
+                    showCheckboxColumn: true,
+                    onSelectAll: onSelectAll,
+                    header: TitleText(widget.sheetTitle, fontSize: FONT_LG),
+                    rowsPerPage: _rowsPerPage,
+                    onRowsPerPageChanged: setRowsPerPage,
+                    availableRowsPerPage: const [10, 25, 50],
+                    onPageChanged: onPageChanged,
+                    showFirstLastButtons: true,
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    actions: actionsUI(context, fetchData),
+                    columns: headersToColumns(_headers, onSort),
+                    source: _source)),
           );
   }
+
+  DataSource get _source =>
+      DataSource(context, _rows[_currentPage]!, _selectedRow,
+          onChanged: (index, valueColumn, value) {
+        _rows[_currentPage]![index][valueColumn] = value;
+      },
+          onDelete: onDelete,
+          onSelect: onselect,
+          isSelected: _isSelected,
+          onEdit: onEditRow,
+          onSaved: onSavedRow);
 
   Future<void> onSavedRow(int index) async {
     try {
@@ -124,7 +126,7 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
       await _httpServices
           .updateRow(widget.sheetTitle, row, index)
           .then((value) {
-        AppMethods.showMessage(context, 'Row updated successfully');
+        AppMethods.showMessage(context, UPDATED_SUCCESSFULLY);
         setState(() => _selectedRow = -1);
       });
     } catch (e) {
@@ -175,7 +177,10 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
   Future<void> onAdd() async {
     await AppMethods.showAddDialog(context, _headers, (row) async {
       try {
-        await _httpServices.addRow(widget.sheetTitle, row,_rowsPerPage * (_currentPage - 1) + 2).then((value) {
+        await _httpServices
+            .addRow(
+                widget.sheetTitle, row, _rowsPerPage * (_currentPage - 1) + 2)
+            .then((value) {
           AppMethods.showMessage(context, 'Row added successfully');
           fetchData();
         });
@@ -233,7 +238,7 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
               onSort: onSort,
             ))
         .toList()
-      ..add(const DataColumn(label: Text('Actions')));
+      ..add(const DataColumn(label: Text(ACTIONS)));
   }
 
   void onPageChanged(int index) async {
@@ -250,112 +255,4 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
   }
 }
 
-class _DataSource extends DataTableSource {
-  _DataSource(this.context, this.data, this.selectedRow,
-      {required this.onSelect,
-      required this.onChanged,
-      required this.isSelected,
-      required this.onEdit,
-      required this.onDelete,
-      required this.onSaved});
 
-  final BuildContext context;
-  final List<List<dynamic>> data;
-  final Function(int) onSelect;
-  final List<bool> isSelected;
-  final Function(int) onEdit;
-  final Function(int) onSaved;
-  final Function(int, int, String) onChanged;
-  final Function(int) onDelete;
-
-  final int selectedRow;
-  List<dynamic> row = [];
-
-  @override
-  DataRow? getRow(int index) {
-    if (index >= data.length) {
-      return null;
-    }
-
-    return DataRow.byIndex(
-      index: index,
-      color: getRowColor(index),
-      selected: isSelected[index],
-      onSelectChanged: (selected) {
-        if (selected != null) {
-          onSelect(index);
-        }
-      },
-      cells: data[index]
-          .map((cell) => DataCell(selectedRow == index
-              ? TextFormField(
-                  initialValue: cell.toString(),
-                  onChanged: (value) {
-                    onChanged(index, data[index].indexOf(cell), value);
-                    notifyListeners();
-                  })
-              : Text(cell.toString())))
-          .toList()
-        ..add(DataCell(Row(children: [
-          selectedRow == index
-              ? IconButton(
-                  icon: const Icon(Icons.save),
-                  onPressed: () {
-                    onSaved(index);
-                    notifyListeners();
-                  })
-              : IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    onEdit(index);
-                    notifyListeners();
-                  }),
-          IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                onDelete(index);
-                notifyListeners();
-              }),
-        ]))),
-    );
-
-    // return DataRow.byIndex(
-    //     index: index,
-    //     color: getRowColor(index),
-    //     selected: isSelected[index],
-    //     onSelectChanged: (selected) {
-    //       if (selected != null) {
-    //         onSelect(index);
-    //       }
-    //     },
-    //     cells: data[index]
-    //         .map((cell) => DataCell(Text(TConverter.valueToString(cell))))
-    //         .toList()
-    //       ..add(DataCell(IconButton(
-    //           icon: const Icon(Icons.edit),
-    //           onPressed: () {
-    //             selectedRow = index;
-    // onEdit(index);
-    //           }))));
-  }
-
-  MaterialStateProperty<Color?> getRowColor(int index) =>
-      MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-        if (states.contains(MaterialState.selected)) {
-          return Theme.of(context).colorScheme.primary.withOpacity(0.08);
-        }
-        if (index.isEven) {
-          return Colors.grey.withOpacity(0.17);
-        }
-        return null;
-      });
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => data.length;
-
-  @override
-  int get selectedRowCount => 0;
-}
