@@ -116,7 +116,7 @@ export class GoogleSheetsService {
     const result = await this.gsheets.spreadsheets.values.append({
       spreadsheetId: spreadsheetId,
       range: `${sheetName}!${range}`, // `Sheet1!A1 default range
-      valueInputOption: ROW,
+      valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [data],
       },
@@ -142,7 +142,7 @@ export class GoogleSheetsService {
     const result = await this.gsheets.spreadsheets.values.update({
       spreadsheetId: spreadsheetId,
       range: `${sheetName}!${range}`,
-      valueInputOption: "USER_ENTERED",
+      valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [data],
       },
@@ -196,7 +196,7 @@ export class GoogleSheetsService {
     });
     return DELETED_SUCCESSFULLY;
   }
-  
+
   /**
    * Append row in Google Sheet
    * @param spreadsheetId - Google Spreadsheet ID
@@ -227,22 +227,45 @@ export class GoogleSheetsService {
     return { updatedRange };
   }
 
-  /** Create new Google Sheet
-   * @param sheetName - Name of the new sheet to create
-   * @returns Promise<String> - Spreadsheet ID
-   * @throws HttpException | Error
-   * */
-  async createSheet(sheetName: string): Promise<string> {
-    const result = await this.gsheets.spreadsheets.create({
-      requestBody: {
-        properties: {
-          title: sheetName,
-        },
-      },
-    });
-
-    return result.data.spreadsheetId;
-  }
+  // /** Create new Google Sheet
+  //  * @param sheetName - Name of the new sheet to create
+  //  * @param spreadsheetId - Google Spreadsheet ID
+  //  * @returns Promise<String> - Spreadsheet ID
+  //  * @throws HttpException | Error
+  //  * */
+  // async createSheet(sheetName: string, spreadsheetId: string): Promise<string> {
+  //   // const result = await this.gsheets.spreadsheets.batchUpdate({
+  //   //   spreadsheetId: spreadsheetId,
+  //   //   requestBody: {
+  //   //     requests: [
+  //   //       {
+  //   //         addSheet: {
+  //   //           properties: {
+  //   //             title: sheetName,
+  //   //           },
+  //   //         },
+  //   //       },
+  //   //     ],
+  //   //   },
+  //   // });
+  //     const result = await this.gsheets.spreadsheets.batchUpdate({
+  //       spreadsheetId: spreadsheetId,
+  //       requestBody: {
+  //         requests: [
+  //           {
+  //             addSheet: {
+  //               properties: {
+  //                 title: "Sheet111",
+  //                 gridProperties: { rowCount: 1000, columnCount: 26 },
+  //               },
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     });
+  //     return result.data.replies[0].addSheet.properties.sheetId.toString();
+    
+  // }
 
   /**
    * Update Google Sheet title

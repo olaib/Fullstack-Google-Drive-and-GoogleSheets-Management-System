@@ -85,10 +85,11 @@ export class GoogleSheetsController {
     };
   }
 
-  @Post('create')
-  async createSheet(@Body() sheetName: string): Promise<string> {
-    return await this.googleSheetsService.createSheet(sheetName);
-  }
+  // @Post('create')
+  // async createSheet(@Body() sheetName: string, @Body() spreadsheetId: string) {
+  //   // sheetName = sheetName.charAt(0).toUpperCase() + sheetName.slice(1);
+  //   return await this.googleSheetsService.createSheet(sheetName, spreadsheetId);
+  // }
 
   //find all sheets details in a spreadsheet
   @Get('titles')

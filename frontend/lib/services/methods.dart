@@ -132,37 +132,85 @@ class AppMethods {
       ),
     );
   }
-  // await showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) => AlertDialog(
-  //         title: const Text('Delete Row'),
-  //         content: const Text('Are you sure you want to delete this row?'),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: const Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: const Text('Delete'),
-  //             onPressed: () async {
-  //               await _httpServices
-  //                   .deleteRow(widget.sheetTitle, index + 1)
-  //                   .then((value) {
-  //                 AppMethods.showMessage(context, 'Row deleted successfully');
-  //                 setState(() {
-  //                   _rows[_currentPage]!.removeAt(index);
-  //                   _isSelected.removeAt(index);
-  //                 });
-  //                 fetchData();
-  //               }).onError((error, stackTrace) {
-  //                 AppMethods.showErrorMessage(context, error.toString());
-  //               });
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       ),
-  //     );
+
+  static showAddDialog(BuildContext context, List headers, Future<Null> Function(dynamic row) param2) {
+    final List<TextEditingController> controllers = [];
+    for (int i = 0; i < headers.length; i++) {
+      controllers.add(TextEditingController());
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Row'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                for (int i = 0; i < headers.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: controllers[i],
+                      decoration: InputDecoration(
+                        labelText: headers[i],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(CANCEL),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(CONFIRM),
+              onPressed: () {
+                final List<String> row = [];
+                for (int i = 0; i < headers.length; i++) {
+                  row.add(controllers[i].text);
+                }
+                param2(row);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Future<void> showInputDialog(BuildContext context, String s, Null Function(dynamic value) param2)async {
+    final TextEditingController controller = TextEditingController();
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(s),
+          content: TextField(
+            controller: controller,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(CANCEL),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(CONFIRM),
+              onPressed: () {
+                param2(controller.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

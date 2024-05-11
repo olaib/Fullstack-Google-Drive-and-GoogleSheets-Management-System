@@ -107,8 +107,8 @@ class HttpServices {
         .then(status)
         .then((data) => data);
   }
-  Future<void>
-  deleteRow(String sheetTitle, int index) async {
+
+  Future<void> deleteRow(String sheetTitle, int index) async {
     _loadSpreadsheetId();
     await http
         .delete(Uri.parse('$_serverUrl/sheets/row'),
@@ -117,6 +117,36 @@ class HttpServices {
               'spreadsheetId': _spreadsheetId,
               'sheetName': sheetTitle,
               'rowNumber': index + 1, //skip headers
+            }))
+        .then(status)
+        .then(json)
+        .then((data) => data);
+  }
+
+  Future<void> addRow(String sheetTitle, List<dynamic> row, int rowNumber) {
+    _loadSpreadsheetId();
+    return http
+        .post(Uri.parse('$_serverUrl/sheets/append'),
+            headers: JSON_HEADERS,
+            body: jsonEncode({
+              'spreadsheetId': _spreadsheetId,
+              'sheetName': sheetTitle,
+              'data': row.map((e) => e.toString()).toList(),
+              'range': '${rowNumber + 1}:${rowNumber + 1}'
+            }))
+        .then(status)
+        .then(json)
+        .then((data) => data);
+  }
+
+  Future<void> createSheet(String sheetTitle) async {
+    _loadSpreadsheetId();
+    await http
+        .post(Uri.parse('$_serverUrl/sheets/create'),
+            headers: JSON_HEADERS,
+            body: jsonEncode({
+              'spreadsheetId': _spreadsheetId,
+              'sheetName': sheetTitle,
             }))
         .then(status)
         .then(json)

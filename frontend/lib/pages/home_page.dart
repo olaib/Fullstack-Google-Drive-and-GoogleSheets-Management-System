@@ -13,7 +13,6 @@ import 'package:frontend/utils/constants/sizes.dart';
 // ignore: unused_import
 import 'package:go_router/go_router.dart';
 
-
 class Sheet {
   String title;
   final int sheetId;
@@ -77,6 +76,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           const Center(child: TitleText(MANAGE_SHEETS)),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+            const SizedBox(width: 10),
             IconButton(
               icon: const Icon(
                 FontAwesomeIcons.arrowsRotate,

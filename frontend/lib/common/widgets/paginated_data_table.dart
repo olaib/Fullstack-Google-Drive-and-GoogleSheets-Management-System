@@ -92,7 +92,7 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
             child: SizedBox(
                 width: double.infinity,
                 child: PaginatedDataTable(
-                  showCheckboxColumn: false,
+                  showCheckboxColumn: true,
                   onSelectAll: onSelectAll,
                   header: TitleText(widget.sheetTitle, fontSize: FONT_LG),
                   rowsPerPage: _rowsPerPage,
@@ -102,7 +102,6 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
                   showFirstLastButtons: true,
                   sortColumnIndex: _sortColumnIndex,
                   sortAscending: _sortAscending,
-                  // refresh
                   actions: actionsUI(context, fetchData),
                   columns: headersToColumns(_headers, onSort),
                   source:
@@ -159,20 +158,31 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
   List<Widget> actionsUI(BuildContext context, Function fetchData) => [
         IconButton(
             icon: const Icon(Icons.refresh, color: BLUE_COLOR),
-            onPressed: () async {
-              _rows.clear();
-              _headers.clear();
-              _currentPage = 1;
-              await fetchData(isFetchingHeaders: true);
-            }),
+            onPressed: refresh),
         IconButton(
           icon: const Icon(Icons.add, color: BLUE_COLOR),
-          onPressed: onAdd,
+          onPressed: () => onAdd(),
         ),
       ];
 
-  void onAdd() {
-    AppMethods.showErrorMessage(context, 'Feature not yet implemented');
+  Future<void> refresh() async {
+    _rows.clear();
+    _headers.clear();
+    _currentPage = 1;
+    await fetchData(isFetchingHeaders: true);
+  }
+
+  Future<void> onAdd() async {
+    await AppMethods.showAddDialog(context, _headers, (row) async {
+      try {
+        await _httpServices.addRow(widget.sheetTitle, row,_rowsPerPage * (_currentPage - 1) + 2).then((value) {
+          AppMethods.showMessage(context, 'Row added successfully');
+          fetchData();
+        });
+      } catch (e) {
+        AppMethods.showErrorMessage(context, e.toString());
+      }
+    });
   }
 
   Future<void> onDelete(int index) async {
