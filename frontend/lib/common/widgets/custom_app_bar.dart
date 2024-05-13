@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/colors.dart';
-import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/providers/auth_provider.dart';
 import 'package:frontend/providers/theme_provider.dart';
@@ -47,6 +46,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
         if (_auth.isAuthenticated)
           buildProfileMenu(context, _auth.user!.name, _auth.user!.email),
         if (NavigationService.canPop(context)) const CustomBackButton(),
+        CustomGestureDetector(
+          icon: Icons.cloud,
+          onTap: () {
+            NavigationService.navigateTo(context, Routes.googleDrive);
+          },
+        ),
       ],
     );
   }
@@ -63,26 +68,31 @@ class _CustomAppBarState extends State<CustomAppBar> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Transform(
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..rotateX(0.01)
-                    ..rotateY(0.01)
-                    ..rotateZ(0.01),
-                  child: AppNameAnimatedText(
-                    label: APP_NAME,
-                    fontSize: 24,
-                    color: Helpers.isDarkMode ? PRIMARY_COLOR : BLACK_COLOR,
-                    baseColor: Helpers.isDarkMode ? BLACK_COLOR : PRIMARY_COLOR,
-                    highlightColor: Helpers.isDarkMode
-                        ? WHITE_COLOR
-                        : PRIMARY_COLOR.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
+            InkWell(
+                onTap: () {
+                  NavigationService.navigateTo(context, Routes.initialRoute);
+                },
+                child: Row(
+                  children: [
+                    Transform(
+                      transform: Matrix4.identity()
+                        ..setEntry(3, 2, 0.001)
+                        ..rotateX(0.01)
+                        ..rotateY(0.01)
+                        ..rotateZ(0.01),
+                      child: AppNameAnimatedText(
+                        label: APP_NAME,
+                        fontSize: 24,
+                        color: Helpers.isDarkMode ? PRIMARY_COLOR : BLACK_COLOR,
+                        baseColor:
+                            Helpers.isDarkMode ? BLACK_COLOR : PRIMARY_COLOR,
+                        highlightColor: Helpers.isDarkMode
+                            ? WHITE_COLOR
+                            : PRIMARY_COLOR.withOpacity(0.5),
+                      ),
+                    ),
+                  ],
+                )),
           ],
         ),
       );

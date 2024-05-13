@@ -4,9 +4,9 @@ import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:frontend/utils/routes/app_routes.dart';
+import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/nav_button.dart';
-import 'package:go_router/go_router.dart';
+import 'package:frontend/utils/storage/preference_utils.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -27,6 +27,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           buildDrawerHeader(context),
+          buildNavButtons(context),
           const Divider(),
           buildFooter(context),
         ],
@@ -65,10 +66,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ...navButtonsData.map((NavButton button) => ListTile(
               title: Text(button.title),
               leading: FaIcon(button.icon),
-              onTap: () => context.goNamed(button.route.name),
+              onTap: () => NavigationService.navigateTo(context, button.route),
             )),
+        //             NavButton(
+        //   myIcon: FontAwesomeIcons.file,
+        //   myRoute: Routes.googleDrive,
+        //   name: 'Files',
+        // ),
+        ListTile(
+          title: const Text('Manage Google Drive files'),
+          leading: const FaIcon(FontAwesomeIcons.googleDrive),
+          onTap: () => NavigationService.navigateTo(context, Routes.googleDrive,
+              params: {ROOT_ID_PARAM: _loadGDriveRoottId()}),
+        ),
       ],
     );
+  }
+
+  String _loadGDriveRoottId() {
+    final gDriveId = PreferenceUtils.getString(GOOGLE_DRIVE_ID_KEY, '');
+    Log.info('Google Drive ID: $gDriveId');
+    if (gDriveId.isEmpty) {
+      throw Exception('Google Drive ID is empty');
+    }
+    return gDriveId;
   }
 
   Widget buildFooter(BuildContext context) {

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
@@ -55,17 +56,42 @@ export class MyGoogleDriveController {
   }
 
   @Get('get/previews')
-  async getFilesUrls(@Body() filesIds: Array<string>): Promise<any> {
+  getFilesUrls(@Body() filesIds: Array<string>): any {
     return this.myGoogleDriveService.getPreviewUrls(filesIds);
   }
 
   @Get('get/view')
-  async getViewUrl(@Param('fileId') fileId: string): Promise<any> {
+  getViewUrl(@Param('fileId') fileId: string): any {
     return this.myGoogleDriveService.getPreviewUrl(fileId);
   }
 
   @Get('get/view/urls')
-  async getViewUrls(@Body() filesIds: Array<string>): Promise<any> {
+  getViewUrls(@Body() filesIds: Array<string>): Promise<any> {
     return this.myGoogleDriveService.getPreviewUrls(filesIds);
+  }
+
+  @Get('list/:folderId')
+  async getFiles(@Param('folderId') folderId: string): Promise<any> {
+    return await this.myGoogleDriveService.getFiles(folderId);
+  }
+
+  @Get('file/details/:fileId')
+  async getFile(@Param('fileId') fileId: string): Promise<any> {
+    return await this.myGoogleDriveService.getFileInfo(fileId);
+  }
+
+  //createFolder params query
+  @Post('create/folder/:folderId')
+  async createFolder(
+    @Query('folderName') folderName: string,
+    @Param('folderId') folderId: string,
+  ): Promise<any> {
+    return await this.myGoogleDriveService.createFolder(folderName, folderId);
+  }
+
+  // get folders in specific folder
+  @Get('folders/:folderId')
+  async getFolders(@Param('folderId') folderId: string): Promise<any> {
+    return await this.myGoogleDriveService.getFolders(folderId);
   }
 }

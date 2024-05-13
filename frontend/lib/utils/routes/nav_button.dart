@@ -16,8 +16,9 @@ class NavButton {
 
 List<NavButton> navButtonsData = [
   NavButton(
-    myIcon: FontAwesomeIcons.house,
+    myIcon: Icons.description,
     myRoute: Routes.home,
-    name: 'בית',
+    name: 'Manage Google Sheets',
   ),
+
 ];

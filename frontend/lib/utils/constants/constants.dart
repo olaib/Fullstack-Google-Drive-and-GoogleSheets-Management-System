@@ -12,6 +12,9 @@ const String SERVER_URL = 'http://localhost:8000',
     ROOT_NAV_KEY = 'root',
     THEME_STATE_KEY = 'THEME_STATE',
     SPREADSHEET_ID_KEY = 'SPREADSHEET_ID', // in preference utils
+    GOOGLE_DRIVE_ID_KEY = 'GOOGLE_DRIVE_ID', // in preference utils
+    FILE_ID_PARAM = 'fileId',
+    ROOT_ID_PARAM = 'rootId',
 
     // =========================== PARAMS ===========================
     SHEET_ID_PARAM = 'sheetId',
@@ -23,7 +26,7 @@ const String SERVER_URL = 'http://localhost:8000',
     MULTIPLY = '*',
     DIVIDE = '/',
     EXPONENT = '^';
-    
+
 final RegExp EXPRESSION_REGEX = RegExp(
         r'^((?:[A-Z]+\d+|\d+)\s*([+\-*\/^]\s*(?:[A-Z]+\d+|\d+))?(?:\s*[+\-*\/^]\s*(?:[A-Z]+\d+|\d+))*)$'),
     CELL_REGEX = RegExp(r'[A-Z]+\d+');
@@ -31,7 +34,10 @@ const OPERATORS = <String>['+', '-', '*', '/', '^'];
 
 // ============================ TEXTS ============================
 const String PAGE_NOT_FOUND_TITLE = '404 🤷‍♂️',
+    FOLDER_TYPE = 'application/vnd.google-apps.folder',
+    FILE_TYPE = 'application/vnd.google-apps.file',
     DELETE_ROW_CONFIRM_MESSAGE = 'Are you sure you want to delete this row?',
+    SAVE_SUCCESSFULLY = 'Saved successfully',
     CANCEL = 'Cancel',
     ACTIONS = 'Actions',
     CONFIRM = 'Confirm',
@@ -53,5 +59,7 @@ const String PAGE_NOT_FOUND_TITLE = '404 🤷‍♂️',
     GENERIC_ERROR_TITLE = 'Error: An unexpected issue occurred 😞',
     EXAMPLE_SPREADSHEET_ID =
         "Example: https://docs.google.com/spreadsheets/d/<spreadsheet_id>/edit",
+    EXAMPLE_DRIVE_ID =
+        "Example: https://drive.google.com/drive/folders/<drive_id>",
     HEADERS_RANGE = 'A1:1';
 const Map<String, String> JSON_HEADERS = {'Content-Type': 'application/json'};

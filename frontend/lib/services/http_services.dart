@@ -152,4 +152,22 @@ class HttpServices {
         .then(json)
         .then((data) => data);
   }
+
+  Future<List<Map<String, dynamic>>> getFiles(String folderId) async {
+    Log.info('folderId: $folderId');
+    return await http
+        .get(Uri.parse('$_serverUrl/google-drive/list/$folderId'))
+        .then(status)
+        .then(json)
+        .then((data) => data.cast<Map<String, dynamic>>());
+  }
+
+  Future<Map<String, dynamic>> getFileInfo(String fileId) async {
+    Log.info('fileId: $fileId');
+    return await http
+        .get(Uri.parse('$_serverUrl/google-drive/file/details/$fileId'))
+        .then(status)
+        .then(json)
+        .then((data) => data);
+  }
 }

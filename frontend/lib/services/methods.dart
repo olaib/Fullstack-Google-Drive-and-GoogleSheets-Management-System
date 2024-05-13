@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/utils/helpers/functions.dart';
+import 'package:frontend/utils/helpers/responsive_widget.dart';
 import 'package:frontend/utils/styles/fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/utils/constants/constants.dart';
@@ -12,7 +13,7 @@ class AppMethods {
   static Future<void> showMessage(BuildContext context, String message,
       {Function? func, MessageType type = MessageType.success}) async {
     if (Helpers.isWebPlatform()) {
-      displayDialog(
+      showSnackbar(
         message: message,
         context: context,
       );
@@ -49,9 +50,15 @@ class AppMethods {
     required BuildContext context,
     MessageType type = MessageType.success,
   }) {
+    final size = ResponsiveWidget.getScreenSize(context);
     final snackBar = SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(
+          left: 10.0, right: 10.0, bottom: size.height / 3),
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
         title: type == MessageType.error
@@ -133,7 +140,8 @@ class AppMethods {
     );
   }
 
-  static showAddDialog(BuildContext context, List headers, Future<Null> Function(dynamic row) param2) {
+  static showAddDialog(BuildContext context, List headers,
+      Future<Null> Function(dynamic row) param2) {
     final List<TextEditingController> controllers = [];
     for (int i = 0; i < headers.length; i++) {
       controllers.add(TextEditingController());
@@ -183,7 +191,8 @@ class AppMethods {
     );
   }
 
-  static Future<void> showInputDialog(BuildContext context, String s, Null Function(dynamic value) param2)async {
+  static Future<void> showInputDialog(BuildContext context, String s,
+      Null Function(dynamic value) param2) async {
     final TextEditingController controller = TextEditingController();
     return await showDialog(
       context: context,
@@ -212,5 +221,4 @@ class AppMethods {
       },
     );
   }
-
 }

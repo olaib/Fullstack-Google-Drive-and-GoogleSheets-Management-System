@@ -14,7 +14,7 @@ class NavigationService {
 
   static void navigateTo(BuildContext context, Routes route,
       {Map<String, String>? params, Map<String, String>? queryParams}) {
-    Log.debug('Navigating to ${route.name} with params: $params');
+    Log.debug('Navigating to ${route.url} with params: $params');
     context.goNamed(route.name,
         pathParameters: {...?params}, queryParameters: {...?queryParams});
   }
@@ -24,4 +24,8 @@ class NavigationService {
   }
 
   static bool canPop(BuildContext context) => context.canPop();
+
+  static void pushNamed(BuildContext context, Routes googleDrive, {required Map<String, String> params}) {
+    context.goNamed(googleDrive.name, pathParameters: params);
+  }
 }

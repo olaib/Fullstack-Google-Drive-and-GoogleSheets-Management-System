@@ -3,7 +3,6 @@ import {
   Get,
   Body,
   Query,
-  Patch,
   Delete,
   Post,
   ParseIntPipe,

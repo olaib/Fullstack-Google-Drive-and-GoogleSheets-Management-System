@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common/widgets/extended_floating_action_button.dart';
+import 'package:frontend/common/widgets/title_text.dart';
 import 'package:frontend/services/methods.dart';
 import 'package:frontend/services/navigation_service.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/storage/preference_utils.dart';
+
+enum ControllersType { spreadsheetId, googleDriveId }
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -13,46 +17,78 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final TextEditingController _spreadsheetIdController =
-      TextEditingController();
-  String _spreadsheetId = "";
+          TextEditingController(),
+      _googleDriveIdController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _spreadsheetIdController.text =
         PreferenceUtils.getString(SPREADSHEET_ID_KEY, "");
-    _spreadsheetId = _spreadsheetIdController.text;
+
+    _googleDriveIdController.text =
+        PreferenceUtils.getString(GOOGLE_DRIVE_ID_KEY, "");
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 50.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Spreadsheet ID $_spreadsheetId"),
-          Text("Please enter your spreadsheet ID",
-              style: Theme.of(context).textTheme.titleLarge),
+          const Center(child: TitleText("Welcome to $APP_NAME", fontSize: 24)),
           const SizedBox(height: 8.0),
-          const Text(
-            "You can find the spreadsheet ID in the URL of your Google Sheet",
-            style: TextStyle(color: Colors.grey),
-          ),
-          const Text(
-            EXAMPLE_SPREADSHEET_ID,
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(height: 8.0),
-          formUI(),
-          const SizedBox(height: 16.0),
-          const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: buttonsUI(),
           ),
+          const SizedBox(height: 16.0),
+          fieldIdForm(ControllersType.spreadsheetId),
+          const SizedBox(height: 16.0),
+          fieldIdForm(ControllersType.googleDriveId),
         ],
       ),
+    );
+  }
+
+  Widget fieldIdForm(ControllersType controllersType) {
+    final type = controllersType == ControllersType.spreadsheetId
+        ? "Spreadsheet ID"
+        : "Google Drive ID";
+    final controller = controllersType == ControllersType.spreadsheetId
+        ? _spreadsheetIdController
+        : _googleDriveIdController;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          "$type ${controllersType == ControllersType.spreadsheetId ? _spreadsheetIdController.text : _googleDriveIdController.text}",
+        ),
+        Text("Please enter your $type",
+            style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8.0),
+        Text(
+          "You can find the $type in the URL of your ${controllersType == ControllersType.spreadsheetId ? "Google Sheet" : "Google Drive"}",
+          style: const TextStyle(color: Colors.grey),
+        ),
+        Text(
+          controllersType == ControllersType.spreadsheetId
+              ? EXAMPLE_SPREADSHEET_ID
+              : EXAMPLE_DRIVE_ID,
+          style: const TextStyle(color: Colors.grey),
+        ),
+        const SizedBox(height: 8.0),
+        formUI(
+            controller: controller,
+            label: type,
+            key: type,
+            onPressed: () => save(
+                controller: controller,
+                key: type == "Spreadsheet ID"
+                    ? SPREADSHEET_ID_KEY
+                    : GOOGLE_DRIVE_ID_KEY)),
+      ],
     );
   }
 
@@ -82,43 +118,49 @@ class _WelcomePageState extends State<WelcomePage> {
         ],
       );
 
-  Widget formUI() => Column(
+  Widget formUI(
+          {required TextEditingController controller,
+          required String label,
+          required String key,
+          required void Function() onPressed}) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
-            controller: _spreadsheetIdController,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Spreadsheet ID",
-                hintText: "Enter your spreadsheet ID"),
+            controller: controller,
+            decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: label,
+                hintText: "Enter your $label"),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "Please enter a valid spreadsheet ID";
+                return "Please enter a valid $label";
               }
               return null;
             },
           ),
           const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: save,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.save),
-                SizedBox(width: 4.0),
-              ],
-            ),
-          ),
+          Center(child: CustomExtendedFloatingActionButton(
+            onPressed: onPressed,
+            label: const Text("Save"),
+            icon: Icons.save,
+            tag: key,
+
+            // child: const Row(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // children: [
+              //   Icon(Icons.save),
+              //   SizedBox(width: 4.0),
+              // ],
+            )),
+          
         ],
       );
 
-  void save() {
+  void save({required TextEditingController controller, required String key}) {
     try {
-      PreferenceUtils.setString(
-          SPREADSHEET_ID_KEY, _spreadsheetIdController.text);
-      // PreferenceUtils.setString(
-      //     SPREADSHEET_ID_KEY, _spreadsheetIdController.text);
-      AppMethods.showMessage(context, "Spreadsheet ID saved");
+      PreferenceUtils.setString(key, controller.text);
+      AppMethods.showMessage(context, SAVE_SUCCESSFULLY);
     } catch (e) {
       AppMethods.showErrorMessage(context, e.toString());
     }

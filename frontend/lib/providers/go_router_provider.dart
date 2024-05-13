@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/google_drive/presentation/root_page.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/constants/sizes.dart';
+import 'package:frontend/utils/logger/logger.dart';
 import 'package:frontend/utils/routes/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/providers/auth_provider.dart';
 import 'package:frontend/pages/index.dart';
 import 'package:frontend/common/widgets/custom_app_bar.dart';
 import 'package:frontend/common/widgets/custom_drawer.dart';
+import 'package:frontend/features/google_drive/presentation/index.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: ROOT_NAV_KEY);
 
@@ -39,7 +42,23 @@ class GoRouterProvider {
               return buildMaterialPage(SheetPage(
                   sheetId: state.pathParameters[SHEET_ID_PARAM],
                   sheetTitle: state.pathParameters[SHEET_TITLE_PARAM]));
-            })
+            }),
+        GoRoute(
+            path: Routes.googleDrive.url,
+            name: Routes.googleDrive.name,
+            pageBuilder: (context, state) =>
+                buildMaterialPage(GoogleDriveHomePage(
+                  fileId: state.pathParameters[ROOT_ID_PARAM],
+                )),
+            routes: [
+              GoRoute(
+                  path: Routes.filesPage.url,
+                  name: Routes.filesPage.name,
+                  pageBuilder: (context, state) =>
+                      buildMaterialPage(FilesListPage(
+                        folderId: state.pathParameters[FILE_ID_PARAM],
+                      )))
+            ]),
       ],
     ),
   ];
@@ -65,6 +84,7 @@ class GoRouterProvider {
   static String? middleware(BuildContext context, GoRouterState state) {
     try {
       final next = state.uri.toString();
+      Log.info('Next: $next');
       return next;
     } catch (error) {
       return '${Routes.error.url}/$error';

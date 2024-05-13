@@ -6,6 +6,7 @@ export const BAREAR: string = 'Bearer',
     'https://developers.google.com/oauthplayground',
   FILE_ID: string = 'fileId',
   GOOGLE_DRIVE_BASE_URL: string = `https://drive.google.com/file/d/${FILE_ID}`,
+  GDRIVE_AUTH_URL: string = 'https://www.googleapis.com/auth/drive',
   GOOGLE_DRIVE_PREVIEW_URL: string = `${GOOGLE_DRIVE_BASE_URL}/preview`,
   GOOGLE_DRIVE_VIEW_URL: string = `${GOOGLE_DRIVE_BASE_URL}/view`,
   SWAGGER_API_DESCRIPTION: string =

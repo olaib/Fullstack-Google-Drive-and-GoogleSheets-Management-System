@@ -6,7 +6,10 @@ enum Routes {
   error,
   loginPage,
   about,
-  sheetScreen, settings,
+  sheetScreen,
+  settings,
+  googleDrive,
+  filesPage,
 }
 
 class MyRoute {
@@ -56,5 +59,15 @@ final Map<Routes, MyRoute> _routesMap = {
     name: 'Sheet',
     url: 'sheet/:sheetId/:title',
     route: Routes.sheetScreen,
+  ),
+  Routes.googleDrive: const MyRoute(
+    name: 'Google Drive',
+    url: 'google_drive/:$ROOT_ID_PARAM',
+    route: Routes.googleDrive,
+  ),
+  Routes.filesPage: const MyRoute(
+    name: 'File',
+    url: 'files/:$FILE_ID_PARAM',
+    route: Routes.filesPage,
   ),
 };

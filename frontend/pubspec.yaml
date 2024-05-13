@@ -50,6 +50,10 @@ dependencies:
   fluttertoast: ^8.2.5
   awesome_snackbar_content: ^0.1.1
   google_fonts: ^6.2.0
+  flutter_phoenix: ^1.1.1
+  google_sign_in: ^6.2.1
+  googleapis: ^13.1.0
+  googleapis_auth: ^1.6.0
 
 dev_dependencies:
   flutter_test:

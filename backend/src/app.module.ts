@@ -12,6 +12,7 @@ import { GlobalModule } from './common/global/global.module';
 import { GoogleDriveModule } from 'nestjs-google-drive';
 import { GOOGLE_DRIVE_REDIRECT_URL } from './constants';
 import { MyGoogleDriveModule } from './my-google-drive/my-google-drive.module';
+import { GoogleAuthModule } from './google-auth/google-auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MyGoogleDriveModule } from './my-google-drive/my-google-drive.module';
     StatusModule,
     AuthModule,
     MyGoogleDriveModule,
+    GoogleAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

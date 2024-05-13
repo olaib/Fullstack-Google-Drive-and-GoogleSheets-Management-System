@@ -10,8 +10,8 @@ class CustomTileDataWidget extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final Widget subtitle;
-  final VoidCallback onEdit;
-  final Function(String) onChangeTitle;
+  final VoidCallback? onEdit;
+  final Function(String)? onChangeTitle;
 
   const CustomTileDataWidget({
     super.key,
@@ -19,8 +19,8 @@ class CustomTileDataWidget extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.subtitle,
-    required this.onEdit,
-    required this.onChangeTitle,
+    this.onEdit,
+    this.onChangeTitle,
   });
 
   @override
@@ -61,33 +61,35 @@ class CustomTileDataWidget extends StatelessWidget {
                   color: BLACK_COLOR,
                   fontSize: FONT_LG,
                   fontFamily: Fonts.OPEN_SANS.fontFamily)),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('Edit title: $title'),
-                        content: TextFormField(
-                          initialValue: title,
-                          onChanged: onChangeTitle,
-                        ),
-                        actions: [
-                          TextButton(
-                            child: const Text('OK'),
-                            onPressed: () {
-                              try{
-                                onEdit();
-                                Navigator.of(context).pop();
-                              } catch (e) {
-                                AppMethods.showErrorMessage(context, e.toString());
-                              }
-                            },
+          if (onEdit != null)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text('Edit title: $title'),
+                          content: TextFormField(
+                            initialValue: title,
+                            onChanged: onChangeTitle,
                           ),
-                        ],
-                      ));
-            },
-          ),
+                          actions: [
+                            TextButton(
+                              child: const Text('OK'),
+                              onPressed: () {
+                                try {
+                                  onEdit!();
+                                  Navigator.of(context).pop();
+                                } catch (e) {
+                                  AppMethods.showErrorMessage(
+                                      context, e.toString());
+                                }
+                              },
+                            ),
+                          ],
+                        ));
+              },
+            ),
         ],
       );
 }

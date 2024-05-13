@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/widgets/title_text.dart';
+import 'package:frontend/features/google_sheets_data/pagenated_data_table/data_source.dart';
 import 'package:frontend/injection_container.dart';
 import 'package:frontend/services/http_services.dart';
 import 'package:frontend/services/methods.dart';
@@ -8,7 +9,6 @@ import 'package:frontend/utils/constants/constants.dart';
 import 'package:frontend/utils/constants/sizes.dart';
 import 'package:frontend/utils/helpers/functions.dart';
 import 'package:frontend/utils/logger/logger.dart';
-import './data_source.dart';
 
 class CustomPaginatedDataTable extends StatefulWidget {
   const CustomPaginatedDataTable({super.key, required this.sheetTitle});
@@ -29,7 +29,7 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
   final ValueNotifier<bool> _isAllSelected = ValueNotifier<bool>(false);
-  List<bool> _isSelected = [];
+  final List<bool> _isSelected = [];
   int _selectedRow = -1;
 
   static final HttpServices _httpServices = getIt<HttpServices>();
@@ -134,7 +134,6 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
     }
   }
 
-  // TODO: fix the issue with the editRow method at backend
   Future<void> onEditRow(int index) async =>
       setState(() => _selectedRow = index);
 
@@ -211,6 +210,10 @@ class _CustomPaginatedDataTableState extends State<CustomPaginatedDataTable> {
     } catch (e) {
       AppMethods.showErrorMessage(context, e.toString());
     }
+  }
+
+  void editRow() {
+    AppMethods.showErrorMessage(context, 'Feature not yet implemented');
   }
 
   /// Sort the table by the given column index and order of the sort
